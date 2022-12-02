@@ -2,12 +2,13 @@ package provider
 
 import (
 	"context"
-	"fmt"
-	"net/http"
+
+	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/runtime"
+	rtc "github.com/go-openapi/runtime/client"
 
 	api "github.com/kelvintaywl/circleci-schedule-go-sdk/client"
 
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -24,7 +25,7 @@ import (
 var _ resource.Resource = &ScheduleResource{}
 var _ resource.ResourceWithImportState = &ScheduleResource{}
 
-var DayOfWeek = [7]string{
+var DayOfWeek = []string{
 	"MON",
 	"TUE",
 	"WED",
@@ -33,7 +34,7 @@ var DayOfWeek = [7]string{
 	"SAT",
 	"SUN",
 }
-var Month = [12]string{
+var Month = []string{
 	"JAN",
 	"FEB",
 	"MAR",
@@ -47,7 +48,7 @@ var Month = [12]string{
 	"NOV",
 	"DEC",
 }
-var AttributionActor = [2]string{
+var AttributionActor = []string{
 	"system",
 	"current",
 }
@@ -59,6 +60,7 @@ func NewScheduleResource() resource.Resource {
 // ScheduleResource defines the resource implementation.
 type ScheduleResource struct {
 	client *api.Circleci
+	auth runtime.ClientAuthInfoWriter
 }
 
 // ScheduleResourceModel describes the resource data model.
@@ -89,7 +91,7 @@ func (r *ScheduleResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Di
 				Computed:            true,
 				Optional:            false,
 				MarkdownDescription: "The unique ID of the schedule",
-				PlanModifiers: []tfsdk.AttributePlanModifiers{
+				PlanModifiers: tfsdk.AttributePlanModifiers{
 					resource.UseStateForUnknown(),
 				},
 				Type: types.StringType,
@@ -99,7 +101,7 @@ func (r *ScheduleResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Di
 				Computed:            true,
 				Optional:            false,
 				MarkdownDescription: "The date and time the schedule was created",
-				PlanModifiers: []tfsdk.AttributePlanModifiers{
+				PlanModifiers: tfsdk.AttributePlanModifiers{
 					resource.UseStateForUnknown(),
 				},
 				Type: types.StringType,
@@ -109,7 +111,7 @@ func (r *ScheduleResource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Di
 				Computed:            true,
 				Optional:            false,
 				MarkdownDescription: "The date and time the schedule was last updated",
-				PlanModifiers: []tfsdk.AttributePlanModifiers{
+				PlanModifiers: tfsdk.AttributePlanModifiers{
 					resource.UseStateForUnknown(),
 				},
 				Type: types.StringType,
@@ -239,18 +241,14 @@ func (r *ScheduleResource) Configure(ctx context.Context, req resource.Configure
 		return
 	}
 
-	client, ok := req.ProviderData.(*api.Circleci)
-
-	if !ok {
-		resp.Diagnostics.AddError(
-			"Unexpected Resource Configure Type",
-			fmt.Sprintf("Expected *api.Circleci, got: %T. Please report this issue to the provider developers.", req.ProviderData),
-		)
-
-		return
-	}
+	// cfg := api.DefaultTransportConfig().WithHost(req.ProviderData.Hostname)
+	cfg := api.DefaultTransportConfig().WithHost("req.ProviderData.Hostname")
+	client := api.NewHTTPClientWithConfig(strfmt.Default, cfg)
+	// auth := rtc.APIKeyAuth("Circle-Token", "header", req.ProviderData.ApiToken)
+	auth := rtc.APIKeyAuth("Circle-Token", "header", "req.ProviderData.ApiToken")
 
 	r.client = client
+	r.auth = auth
 }
 
 func (r *ScheduleResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -303,10 +301,8 @@ func (r *ScheduleResource) Read(ctx context.Context, req resource.ReadRequest, r
 		return
 	}
 
-	r.client.
-
-		// Save updated data into Terraform state
-		resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	// Save updated data into Terraform state
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
 func (r *ScheduleResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
