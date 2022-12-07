@@ -4,7 +4,8 @@ import (
 	"flag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
-	"github.com/hashicorp/terraform-provider-scaffolding/internal/provider"
+
+	circleci "github.com/kelvintaywl/terraform-provider-circleci/internal/provider"
 )
 
 // Run "go generate" to format example terraform files and generate the docs for the registry/website
@@ -36,9 +37,9 @@ func main() {
 		Debug: debugMode,
 
 		// TODO: update this string with the full name of your provider as used in your configs
-		ProviderAddr: "registry.terraform.io/hashicorp/scaffolding",
+		ProviderAddr: "registry.terraform.io/kelvintaywl/circleci",
 
-		ProviderFunc: provider.New(version),
+		ProviderFunc: circleci.New(version),
 	}
 
 	plugin.Serve(opts)
