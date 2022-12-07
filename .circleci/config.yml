@@ -1,0 +1,30 @@
+version: 2.1
+
+orbs:
+  go: circleci/go@1.7.1
+
+jobs:
+  test:
+    executor:
+      name: go/default
+      tag: '1.19'
+    steps:
+      - checkout
+      - go/load-cache
+      - run:
+          name: Install dependencies
+          command: go mod tidy
+      - go/save-cache
+      - run:
+          name: Format
+          command: go fmt ./...
+      - run:
+          name: Test
+          command: go test ./...
+
+workflows:
+  main:
+    jobs:
+      - test
+
+# VS Code Extension Version: 1.4.0
