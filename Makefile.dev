@@ -9,7 +9,7 @@ init:
 
 .PHONY: build
 build:
-    go fmt
+	go fmt ./...
 	echo "Building Go binary"
 	go build -o terraform-provider-circleci_v0.0.1
 	make -f Makefile.dev clean_sandbox
