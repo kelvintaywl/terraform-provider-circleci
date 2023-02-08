@@ -9,7 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 
 	"github.com/kelvintaywl/circleci-webhook-go-sdk/client/webhook"
 )
@@ -34,8 +33,8 @@ type WebhooksDataSourceModel struct {
 type webhookModel struct {
 	ID            types.String   `tfsdk:"id"`
 	Name          types.String   `tfsdk:"name"`
-	Url           types.String   `tfsdk:"url"`
-	VerifyTls     types.Bool     `tfsdk:"verify_tls"`
+	URL           types.String   `tfsdk:"url"`
+	VerifyTLS     types.Bool     `tfsdk:"verify_tls"`
 	SigningSecret types.String   `tfsdk:"signing_secret"`
 	CreatedAt     types.String   `tfsdk:"created_at"`
 	UpdatedAt     types.String   `tfsdk:"updated_at"`
@@ -91,19 +90,22 @@ func (d *WebhooksDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							MarkdownDescription: "Whether to enforce TLS certificate verification when delivering the webhook",
 							Computed:            true,
 						},
-						"events": schema.ListNestedAttribute{
-							MarkdownDescription: "Masked value of the secret used to build an HMAC hash of the payload",
+						"events": schema.ListAttribute{
+							MarkdownDescription: "Events that will trigger the webhook",
 							Computed:            true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"id": schema.StringAttribute{
-										MarkdownDescription: "Scope ID",
-										Computed:            true,
-									},
-									"type": schema.StringAttribute{
-										MarkdownDescription: "Scope type (project)",
-										Computed:            true,
-									},
+							ElementType:         types.StringType,
+						},
+						"scope": schema.SingleNestedAttribute{
+							MarkdownDescription: "Scope",
+							Computed:            true,
+							Attributes: map[string]schema.Attribute{
+								"id": schema.StringAttribute{
+									MarkdownDescription: "Scope ID",
+									Computed:            true,
+								},
+								"type": schema.StringAttribute{
+									MarkdownDescription: "Scope type (project)",
+									Computed:            true,
 								},
 							},
 						},
@@ -153,21 +155,35 @@ func (d *WebhooksDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	webhooksInfo := res.GetPayload()
+	info := res.GetPayload()
 	// TODO: paginate
-	webhooks := webhooksInfo.Items
-	for i, w := range webhooks {
-		msg := fmt.Sprintf("%dth schedule: %s, %s, %s, %v", (i + 1), w.ID, w.Name, w.URL, w.Events)
-		resp.Diagnostics.AddWarning("Webhook", msg)
+	for _, w := range info.Items {
+		webhookState := webhookModel{
+			ID:            types.StringValue(w.ID.String()),
+			Name:          types.StringValue(w.Name),
+			URL:           types.StringValue(w.URL),
+			VerifyTLS:     types.BoolValue(w.VerifyTLS),
+			SigningSecret: types.StringValue(w.SigningSecret),
+			CreatedAt:     types.StringValue(w.CreatedAt.String()),
+			UpdatedAt:     types.StringValue(w.UpdatedAt.String()),
+			Scope: scopeModel{
+				ID:   types.StringValue(w.Scope.ID.String()),
+				Type: types.StringValue(*w.Scope.Type),
+			},
+		}
+		for _, event := range w.Events {
+			webhookState.Events = append(webhookState.Events, types.StringValue(event))
+		}
+		data.Webhooks = append(data.Webhooks, webhookState)
 	}
-	// For the purposes of this example code, hardcoding a response value to
-	// save into the Terraform state.
-	// data.Id = types.StringValue("example-id")
 
-	// Write logs using the tflog package
-	// Documentation: https://terraform.io/plugin/log
-	tflog.Trace(ctx, "read a data source")
+	resp.Diagnostics.AddWarning("DONE", fmt.Sprintf("%%v: %v\n", data))
 
+	// FIXME: error seen here
 	// Save data into Terraform state
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	diags := resp.State.Set(ctx, &data)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 }
