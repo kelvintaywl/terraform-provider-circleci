@@ -9,7 +9,7 @@
 
 | Data Source | Status |
 | --- | --- |
-| Webhook | In progress (10%) :construction_worker: |
+| Webhooks | In progress (15%) :construction_worker: |
 
 | Resource | Status |
 | --- | --- |
