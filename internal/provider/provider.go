@@ -11,10 +11,12 @@ import (
 	rtc "github.com/go-openapi/runtime/client"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 
 	api "github.com/kelvintaywl/circleci-webhook-go-sdk/client"
 )
@@ -23,7 +25,7 @@ import (
 var _ provider.Provider = &CircleciProvider{}
 
 const (
-	defaultHostName string = "https://circleci.com"
+	defaultHostName string = "circleci.com"
 )
 
 // CircleciProvider defines the provider implementation.
@@ -36,7 +38,7 @@ type CircleciProvider struct {
 
 type CircleciAPIClient struct {
 	Client *api.Circleci
-	Auth runtime.ClientAuthInfoWriter
+	Auth   runtime.ClientAuthInfoWriter
 }
 
 // CircleciProviderModel describes the provider data model.
@@ -88,7 +90,8 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 	}
 
 	if apiToken == "" {
-		resp.Diagnostics.AddError(
+		resp.Diagnostics.AddAttributeError(
+			path.Root("api_token"),
 			"Missing CircleCI user API Token configuration",
 			"While configuring the provider, the CircleCI user API token was not found in "+
 				"the CIRCLE_TOKEN environment variable or provider "+
@@ -107,15 +110,14 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 		)
 	}
 	// FIXME: delete
-	resp.Diagnostics.AddWarning("DEBUG: API token", apiToken)
-	resp.Diagnostics.AddWarning("DEBUG: API host", hostname)
+	tflog.Info(ctx, "DEBUG", map[string]any{"apiToken": apiToken, "hostname": hostname})
 
 	cfg := api.DefaultTransportConfig().WithHost(hostname)
 	client := api.NewHTTPClientWithConfig(strfmt.Default, cfg)
 	auth := rtc.APIKeyAuth("Circle-Token", "header", apiToken)
-	apiClient := CircleciAPIClient{
+	apiClient := &CircleciAPIClient{
 		Client: client,
-		Auth: auth,
+		Auth:   auth,
 	}
 
 	resp.DataSourceData = apiClient
@@ -129,7 +131,7 @@ func (p *CircleciProvider) Resources(ctx context.Context) []func() resource.Reso
 
 func (p *CircleciProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		NewWebhookDataSource,
+		NewWebhooksDataSource,
 	}
 }
 
