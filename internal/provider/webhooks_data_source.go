@@ -86,6 +86,10 @@ func (d *WebhooksDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							MarkdownDescription: "The date and time the webhook was created",
 							Computed:            true,
 						},
+						"updated_at": schema.StringAttribute{
+							MarkdownDescription: "The date and time the webhook was updated",
+							Computed:            true,
+						},
 						"verify_tls": schema.BoolAttribute{
 							MarkdownDescription: "Whether to enforce TLS certificate verification when delivering the webhook",
 							Computed:            true,
@@ -179,7 +183,6 @@ func (d *WebhooksDataSource) Read(ctx context.Context, req datasource.ReadReques
 
 	resp.Diagnostics.AddWarning("DONE", fmt.Sprintf("%%v: %v\n", data))
 
-	// FIXME: error seen here
 	// Save data into Terraform state
 	diags := resp.State.Set(ctx, &data)
 	resp.Diagnostics.Append(diags...)

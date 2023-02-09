@@ -2,18 +2,18 @@
 
 ## Support status
 
-| Provider Block | Status |
-| --- | --- |
-| api_token | Done :white_check_mark: |
-| hostname | Done :white_check_mark: |
+| Provider Block | Status | Remarks |
+| --- | --- | --- |
+| api_token | Done :white_check_mark: | |
+| hostname | Done :white_check_mark: | |
 
-| Data Source | Status |
+| Data Source | Status | Remarks |
 | --- | --- |
-| Webhooks | In progress (15%) :construction_worker: |
+| Webhooks | In progress (70%) :construction_worker: | TODO: pagination |
 
-| Resource | Status |
-| --- | --- |
-| Webhook | In progress (10%) :construction_worker: |
+| Resource | Status | Remarks |
+| --- | --- | --- |
+| Webhook | In progress (10%) :construction_worker: | TODO: CRUD |
 
 ## Example
 

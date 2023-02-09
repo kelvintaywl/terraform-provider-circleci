@@ -14,3 +14,8 @@ provider "circleci" {
 data "circleci_webhooks" "project_webhooks" {
   project_id = "32bbe47f-2bdf-4bb7-8390-ce682161a95f"
 }
+
+output "webook_urls" {
+  description = "URLs of webhooks"
+  value       = data.circleci_webhooks.project_webhooks.webhooks[*].url
+}
