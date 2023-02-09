@@ -160,7 +160,10 @@ func (d *WebhooksDataSource) Read(ctx context.Context, req datasource.ReadReques
 	}
 
 	info := res.GetPayload()
+
 	// TODO: paginate
+	// However, it seems the ListWebhooks API does not support page-token query params.
+	// See https://circleci.com/docs/api/v2/index.html#operation/getWebhooks
 	for _, w := range info.Items {
 		webhookState := webhookModel{
 			ID:            types.StringValue(w.ID.String()),
