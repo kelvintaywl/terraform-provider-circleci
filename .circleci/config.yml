@@ -18,6 +18,9 @@ jobs:
     resource_class: medium
     steps:
       - checkout
+      - run:
+          name: Spin up test dependencies
+          command: docker-compose up -d
       - go/install:
           version: '1.19.3'
       - run:
@@ -30,33 +33,24 @@ jobs:
             OS: linux
             ARCH: amd64
       - run:
-          name: Spin up test dependencies
-          command: docker-compose up
-          background: true
-      - run:
           name: Wait for mock server (8080)
           command: |
             # Docker Compose needs to pull the images;
-            # Prism will take quite some time to initialize
-            sleep 60
+            # Prism may take quite some time to initialize
+            sleep 20
 
-            URL="http://${CIRCLE_HOSTNAME}/api/v2/webhook\?scope-id\=123e4567-e89b-12d3-a456-426614174000\&scope-type\=project"
-            
             N=8
             while [ $N -gt 0 ]
             do
-              if $(curl -s --fail -H "Circle-Token: ${CIRCLE_TOKEN}" $URL ); then
+              if $(curl -s --fail -H "Circle-Token: fooBar" -o /dev/null http://127.0.0.1:8080/api/v2/webhook\?scope-id\=123e4567-e89b-12d3-a456-426614174000\&scope-type\=project); then
                 echo "Connected!"
                 exit 0
               fi
               echo "Not connected; retrying"
               N=$(( $N - 1 ))
-              sleep 5
+              sleep 2
             done
             exit 1
-          environment:
-            CIRCLE_HOSTNAME: localhost:8080
-            CIRCLE_TOKEN: fooBar
       - run:
           name: Run acceptance tests
           command: make testacc
