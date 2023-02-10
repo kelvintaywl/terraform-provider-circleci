@@ -2,6 +2,10 @@ default: testacc
 
 TF_STACK_DIR := ./sandbox
 
+.PHONY: docs
+docs:
+	go generate ./...
+
 # Run acceptance tests
 .PHONY: testacc
 testacc:

@@ -1,0 +1,23 @@
+---
+page_title: "Provider: CircleCI"
+description: |-
+  The CircleCI provider enpowers users to CircleCI resources via Terraform
+---
+
+# {{ .ProviderShortName | upper }} Provider
+
+**This is an unofficial Terraform provider for CircleCI.**
+
+The CircleCI provider supports the creation of specific CircleCI resources.
+
+Currently, the following resources are supported:
+
+- [Project Webhook](https://circleci.com/docs/webhooks/)
+
+Use the navigation to the left to read about the available resources.
+
+## Example Usage
+
+{{ tffile "examples/provider/provider.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}

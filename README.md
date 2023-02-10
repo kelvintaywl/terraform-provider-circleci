@@ -41,6 +41,17 @@ $ make tf.apply
 $ make tf.destroy
 ```
 
+## Docs
+
+```console
+# to generate docs
+# check docs/index.md
+$ make docs
+```
+
+See [docs](docs/index.md)
+
+
 ## Notes
 
 This depends on a CircleCI webhook Go SDK I (auto) generated:

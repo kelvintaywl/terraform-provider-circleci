@@ -56,11 +56,11 @@ func (p *CircleciProvider) Schema(ctx context.Context, req provider.SchemaReques
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"api_token": schema.StringAttribute{
-				MarkdownDescription: "CircleCI user API token",
+				MarkdownDescription: "CircleCI User API token",
 				Optional:            true,
 			},
 			"hostname": schema.StringAttribute{
-				MarkdownDescription: "CircleCI API server hostname",
+				MarkdownDescription: fmt.Sprintf("CircleCI hostname (default: %s)", defaultHostName),
 				Optional:            true,
 			},
 		},
