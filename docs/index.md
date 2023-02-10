@@ -38,3 +38,4 @@ provider "circleci" {
 
 - `api_token` (String) CircleCI User API token
 - `hostname` (String) CircleCI hostname (default: circleci.com)
+- `https` (Boolean) Use HTTPS (default: true)

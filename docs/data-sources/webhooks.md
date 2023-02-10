@@ -21,6 +21,7 @@ Fetches the list of webhooks for a specific project.
 
 ### Read-Only
 
+- `id` (String) Unique identifier of this data source: project ID.
 - `webhooks` (Attributes List) List of webhooks (see [below for nested schema](#nestedatt--webhooks))
 
 <a id="nestedatt--webhooks"></a>
