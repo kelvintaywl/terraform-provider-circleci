@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  # fake CircleCI server
+  prism:
+    image: stoplight/prism:4
+    command: 'mock -h 0.0.0.0 https://raw.githubusercontent.com/kelvintaywl/circleci-webhook-go-sdk/main/openapi.yaml'
+    networks:
+      - prism
+    expose:
+      - "4010"
+  nginx:
+    image: nginx
+    networks:
+      - prism
+    ports:
+      - "8080:80"
+    depends_on:
+      - prism
+    volumes:
+      # Override default config to act as TLS proxy
+      - ./nginx/testacc.conf:/etc/nginx/conf.d/default.conf:ro
+
+networks:
+  prism:

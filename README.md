@@ -41,6 +41,23 @@ $ make tf.apply
 $ make tf.destroy
 ```
 
+### Testing locally
+
+**Note**: This project uses a mock server, via [Prism](https://stoplight.io/open-source/prism), in place of circleci.com.
+Refer to the [Docker Compose file](docker-compose.yml) for details.
+
+```console
+
+# start mock server
+$ docker-compose up -d
+
+# wait for Nginx and Prism to be ready
+
+# Run acceptance tests
+$ make testacc
+```
+
+
 ## Docs
 
 ```console

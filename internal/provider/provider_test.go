@@ -13,7 +13,9 @@ const (
 	providerConfig = `
 provider "circleci" {
   api_token    = "fooBar"
-  hostname     = "circleci.example.com"
+  // see docker-compose.yml
+  hostname     = "localhost:8080"
+  https        = false
 }
 `
 )
