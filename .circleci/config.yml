@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   go: circleci/go@1.7.2
+  tf: circleci/terraform@3.2.0
 
 executors:
   go1193:
@@ -23,11 +24,11 @@ jobs:
           name: Install dependencies
           command: go mod tidy
       - run:
-          name: Build binary
-          command: make binary
-      - run:
-          name: Setup local binary
+          name: Setup and build local binary
           command: make init
+          environment:
+            OS: linux
+            ARCH: amd64
       - run:
           name: Spin up test dependencies
           command: docker-compose up
@@ -35,6 +36,9 @@ jobs:
       - run:
           name: Wait for mock server (8080)
           command: |
+            # Docker Compose needs to pull the images
+            sleep 20
+
             URL="http://${CIRCLE_HOSTNAME}/api/v2/webhook\?scope-id\=123e4567-e89b-12d3-a456-426614174000\&scope-type\=project"
             
             N=8
@@ -46,7 +50,7 @@ jobs:
               fi
               echo "Not connected; retrying"
               N=$(( $N - 1 ))
-              sleep 1
+              sleep 2
             done
             exit 1
           environment:
@@ -61,6 +65,8 @@ jobs:
     resource_class: small
     steps:
       - checkout
+      - tf/install:
+          terraform_version: '1.3.7'
       - run:
           name: Install dependencies
           command: go mod tidy

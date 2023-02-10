@@ -1,6 +1,9 @@
 default: testacc
 
 TF_STACK_DIR := ./sandbox
+OS ?= darwin
+ARCH ?= arm64
+OS_ARCH := $(OS)_$(ARCH)
 
 .PHONY: docs
 docs:
@@ -11,21 +14,21 @@ docs:
 testacc:
 	TF_ACC=1 go test ./... -v $(TESTARGS) -timeout 120m
 
-# Sets up your local workstation to "accept" this local provider binary
-.PHONY: init
-init:
-	echo "Initializing..."
-	echo "Setting up for local provider..."
-	# assuming your workstation is on Mac M1
-	mkdir -p ~/.terraform.d/plugins/example.com/kelvintaywl/circleci/0.0.1/darwin_arm64
-	ln -s ./terraform-provider-circleci_v0.0.1 ~/.terraform.d/plugins/example.com/kelvintaywl/circleci/0.0.1/darwin_arm64/terraform-provider-circleci_v0.0.
-
 # Builds the go binary
 .PHONY: binary
 binary:
 	go fmt ./...
 	echo "Building Go binary"
 	go build -o terraform-provider-circleci_v0.0.1
+
+# Sets up your local workstation to "accept" this local provider binary
+.PHONY: init
+init: binary
+	echo "Initializing..."
+	echo "Setting up for local provider..."
+	# assuming your workstation is on Mac M1
+	mkdir -p ~/.terraform.d/plugins/example.com/kelvintaywl/circleci/0.0.1/$(OS_ARCH)
+	ln -s $(CURDIR)/terraform-provider-circleci_v0.0.1 ~/.terraform.d/plugins/example.com/kelvintaywl/circleci/0.0.1/$(OS_ARCH)/terraform-provider-circleci_v0.0.1
 
 # Builds the go binary, and cleans up Terraform lock file just in case
 .PHONY: build
