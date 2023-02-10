@@ -12,10 +12,11 @@ provider "circleci" {
 }
 
 data "circleci_webhooks" "project_webhooks" {
-  project_id = "32bbe47f-2bdf-4bb7-8390-ce682161a95f"
+  // github/kelvintaywl-cci/ssh-ec2
+  project_id = "a2502849-6bf0-486d-a357-75d331c65237"
 }
 
-output "webook_urls" {
-  description = "URLs of webhooks"
-  value       = data.circleci_webhooks.project_webhooks.webhooks[*].url
+output "webhooks" {
+  description = "webhook_details"
+  value       = data.circleci_webhooks.project_webhooks.webhooks == null ? null : data.circleci_webhooks.project_webhooks.webhooks[*]
 }
