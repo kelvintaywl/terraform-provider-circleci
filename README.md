@@ -8,7 +8,7 @@
 | hostname | Done :white_check_mark: | |
 
 | Data Source | Status | Remarks |
-| --- | --- |
+| --- | --- | --- |
 | Webhooks | In progress (70%) :construction_worker: | TODO: pagination |
 
 | Resource | Status | Remarks |
