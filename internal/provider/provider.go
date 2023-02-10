@@ -28,6 +28,11 @@ const (
 	defaultHostName string = "circleci.com"
 )
 
+// New is a helper function to simplify provider server and testing implementation.
+func New() provider.Provider {
+	return &CircleciProvider{}
+}
+
 // CircleciProvider defines the provider implementation.
 type CircleciProvider struct {
 	// version is set to the provider version on release, "dev" when the
@@ -132,13 +137,5 @@ func (p *CircleciProvider) Resources(ctx context.Context) []func() resource.Reso
 func (p *CircleciProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewWebhooksDataSource,
-	}
-}
-
-func New(version string) func() provider.Provider {
-	return func() provider.Provider {
-		return &CircleciProvider{
-			version: version,
-		}
 	}
 }
