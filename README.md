@@ -4,8 +4,8 @@
 
 | Provider Block | Status | Remarks |
 | --- | --- | --- |
-| api_token | Done :white_check_mark: | |
-| hostname | Done :white_check_mark: | |
+| api_token | Done :white_check_mark: | $CIRCLE_TOKEN supported |
+| hostname | Done :white_check_mark: | $CIRCLE_HOSTNAME supported |
 
 | Data Source | Status | Remarks |
 | --- | --- | --- |
