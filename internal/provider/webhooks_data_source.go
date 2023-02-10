@@ -28,6 +28,7 @@ type WebhooksDataSource struct {
 type WebhooksDataSourceModel struct {
 	ProjectId types.String   `tfsdk:"project_id"`
 	Webhooks  []webhookModel `tfsdk:"webhooks"`
+	Id        types.String   `tfsdk:"id"`
 }
 
 type webhookModel struct {
@@ -60,6 +61,10 @@ func (d *WebhooksDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"project_id": schema.StringAttribute{
 				MarkdownDescription: "CircleCI project ID.",
 				Required:            true,
+			},
+			"id": schema.StringAttribute{
+				MarkdownDescription: "Unique identifier of this data source: project ID.",
+				Computed:            true,
 			},
 			"webhooks": schema.ListNestedAttribute{
 				MarkdownDescription: "List of webhooks",
@@ -187,6 +192,7 @@ func (d *WebhooksDataSource) Read(ctx context.Context, req datasource.ReadReques
 		}
 		data.Webhooks = append(data.Webhooks, webhookState)
 	}
+	data.Id = data.ProjectId
 
 	// Save data into Terraform state
 	diags := resp.State.Set(ctx, &data)

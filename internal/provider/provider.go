@@ -16,7 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 
 	api "github.com/kelvintaywl/circleci-webhook-go-sdk/client"
 )
@@ -50,6 +49,7 @@ type CircleciAPIClient struct {
 type CircleciProviderModel struct {
 	ApiToken types.String `tfsdk:"api_token"`
 	Hostname types.String `tfsdk:"hostname"`
+	Https    types.Bool   `tfsdk:"https"`
 }
 
 func (p *CircleciProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -66,6 +66,10 @@ func (p *CircleciProvider) Schema(ctx context.Context, req provider.SchemaReques
 			},
 			"hostname": schema.StringAttribute{
 				MarkdownDescription: fmt.Sprintf("CircleCI hostname (default: %s)", defaultHostName),
+				Optional:            true,
+			},
+			"https": schema.BoolAttribute{
+				MarkdownDescription: "Use HTTPS (default: true)",
 				Optional:            true,
 			},
 		},
@@ -114,10 +118,14 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 				fmt.Sprintf("configuration block hostname attribute.\nUsing default: %s", hostname),
 		)
 	}
-	// FIXME: delete
-	tflog.Info(ctx, "DEBUG", map[string]any{"apiToken": apiToken, "hostname": hostname})
 
 	cfg := api.DefaultTransportConfig().WithHost(hostname)
+
+	// only for acceptance testing
+	if data.Https.ValueBool() == false {
+		cfg = cfg.WithSchemes([]string{"http"})
+	}
+
 	client := api.NewHTTPClientWithConfig(strfmt.Default, cfg)
 	auth := rtc.APIKeyAuth("Circle-Token", "header", apiToken)
 	apiClient := &CircleciAPIClient{
