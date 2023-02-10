@@ -37,9 +37,8 @@ jobs:
           command: |
             # Docker Compose needs to pull the images;
             # Prism may take quite some time to initialize
-            sleep 20
 
-            N=8
+            N=20
             while [ $N -gt 0 ]
             do
               if $(curl -s --fail -H "Circle-Token: fooBar" -o /dev/null http://127.0.0.1:8080/api/v2/webhook\?scope-id\=123e4567-e89b-12d3-a456-426614174000\&scope-type\=project); then
