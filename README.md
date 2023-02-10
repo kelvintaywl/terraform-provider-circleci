@@ -1,6 +1,7 @@
 # (Unofficial) Terraform Provider for CircleCI
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/kelvintaywl/terraform-provider-circleci)](https://goreportcard.com/report/github.com/kelvintaywl/terraform-provider-circleci)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/kelvintaywl-cci/terraform-provider-circleci/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/kelvintaywl-cci/terraform-provider-circleci/tree/main)
 
 ## Support status
 
