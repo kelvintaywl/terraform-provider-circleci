@@ -161,9 +161,11 @@ func (d *WebhooksDataSource) Read(ctx context.Context, req datasource.ReadReques
 
 	info := res.GetPayload()
 
-	// TODO: paginate
+	// token := info.NextPageToken
+	// TODO: consider support of pagination
 	// However, it seems the ListWebhooks API does not support page-token query params.
 	// See https://circleci.com/docs/api/v2/index.html#operation/getWebhooks
+
 	for _, w := range info.Items {
 		webhookState := webhookModel{
 			ID:            types.StringValue(w.ID.String()),
@@ -173,6 +175,8 @@ func (d *WebhooksDataSource) Read(ctx context.Context, req datasource.ReadReques
 			SigningSecret: types.StringValue(w.SigningSecret),
 			CreatedAt:     types.StringValue(w.CreatedAt.String()),
 			UpdatedAt:     types.StringValue(w.UpdatedAt.String()),
+			// NOTE: Scope values MUST be returned;
+			// we can assume this, based on https://circleci.com/docs/api/v2/index.html#operation/getWebhooks
 			Scope: scopeModel{
 				ID:   types.StringValue(w.Scope.ID.String()),
 				Type: types.StringValue(*w.Scope.Type),
@@ -183,8 +187,6 @@ func (d *WebhooksDataSource) Read(ctx context.Context, req datasource.ReadReques
 		}
 		data.Webhooks = append(data.Webhooks, webhookState)
 	}
-
-	resp.Diagnostics.AddWarning("DONE", fmt.Sprintf("%%v: %v\n", data))
 
 	// Save data into Terraform state
 	diags := resp.State.Set(ctx, &data)
