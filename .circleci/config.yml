@@ -36,8 +36,9 @@ jobs:
       - run:
           name: Wait for mock server (8080)
           command: |
-            # Docker Compose needs to pull the images
-            sleep 20
+            # Docker Compose needs to pull the images;
+            # Prism will take quite some time to initialize
+            sleep 60
 
             URL="http://${CIRCLE_HOSTNAME}/api/v2/webhook\?scope-id\=123e4567-e89b-12d3-a456-426614174000\&scope-type\=project"
             
@@ -50,7 +51,7 @@ jobs:
               fi
               echo "Not connected; retrying"
               N=$(( $N - 1 ))
-              sleep 2
+              sleep 5
             done
             exit 1
           environment:
@@ -62,7 +63,7 @@ jobs:
 
   docs:
     executor: go1193
-    resource_class: small
+    resource_class: medium
     steps:
       - checkout
       - tf/install:
@@ -70,6 +71,7 @@ jobs:
       - run:
           name: Install dependencies
           command: go mod tidy
+      - run: make binary
       - run: make docs
       - run: git status
 

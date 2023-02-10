@@ -1,6 +1,7 @@
 default: testacc
 
 TF_STACK_DIR := ./sandbox
+# defaults; ssuming your workstation is on Mac M1
 OS ?= darwin
 ARCH ?= arm64
 OS_ARCH := $(OS)_$(ARCH)
@@ -26,7 +27,6 @@ binary:
 init: binary
 	echo "Initializing..."
 	echo "Setting up for local provider..."
-	# assuming your workstation is on Mac M1
 	mkdir -p ~/.terraform.d/plugins/example.com/kelvintaywl/circleci/0.0.1/$(OS_ARCH)
 	ln -s $(CURDIR)/terraform-provider-circleci_v0.0.1 ~/.terraform.d/plugins/example.com/kelvintaywl/circleci/0.0.1/$(OS_ARCH)/terraform-provider-circleci_v0.0.1
 
