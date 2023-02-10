@@ -1,0 +1,74 @@
+version: 2.1
+
+orbs:
+  go: circleci/go@1.7.2
+
+executors:
+  go1193:
+    docker:
+      - image: cimg/go:1.19.3
+  ubuntu2204:
+    machine:
+      image: ubuntu-2204:2022.10.2
+
+jobs:
+  test:
+    executor: ubuntu2204
+    resource_class: medium
+    steps:
+      - checkout
+      - go/install:
+          version: '1.19.3'
+      - run:
+          name: Install dependencies
+          command: go mod tidy
+      - run:
+          name: Build binary
+          command: make binary
+      - run:
+          name: Setup local binary
+          command: make init
+      - run:
+          name: Spin up test dependencies
+          command: docker-compose up
+          background: true
+      - run:
+          name: Wait for mock server (8080)
+          command: |
+            URL="http://${CIRCLE_HOSTNAME}/api/v2/webhook\?scope-id\=123e4567-e89b-12d3-a456-426614174000\&scope-type\=project"
+            
+            N=8
+            while [ $N -gt 0 ]
+            do
+              if $(curl -s --fail -H "Circle-Token: ${CIRCLE_TOKEN}" $URL ); then
+                echo "Connected!"
+                exit 0
+              fi
+              echo "Not connected; retrying"
+              N=$(( $N - 1 ))
+              sleep 1
+            done
+            exit 1
+          environment:
+            CIRCLE_HOSTNAME: localhost:8080
+            CIRCLE_TOKEN: fooBar
+      - run:
+          name: Run acceptance tests
+          command: make testacc
+
+  docs:
+    executor: go1193
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: go mod tidy
+      - run: make docs
+      - run: git status
+
+workflows:
+  on-commit:
+    jobs:
+      - test
+      - docs
