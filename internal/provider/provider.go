@@ -139,7 +139,9 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 
 func (p *CircleciProvider) Resources(ctx context.Context) []func() resource.Resource {
 	// TODO:
-	return []func() resource.Resource{}
+	return []func() resource.Resource{
+		NewWebhookResource,
+	}
 }
 
 func (p *CircleciProvider) DataSources(ctx context.Context) []func() datasource.DataSource {

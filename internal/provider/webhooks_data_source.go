@@ -176,7 +176,7 @@ func (d *WebhooksDataSource) Read(ctx context.Context, req datasource.ReadReques
 			ID:            types.StringValue(w.ID.String()),
 			Name:          types.StringValue(w.Name),
 			URL:           types.StringValue(w.URL),
-			VerifyTLS:     types.BoolValue(w.VerifyTLS),
+			VerifyTLS:     types.BoolValue(*w.VerifyTLS),
 			SigningSecret: types.StringValue(w.SigningSecret),
 			CreatedAt:     types.StringValue(w.CreatedAt.String()),
 			UpdatedAt:     types.StringValue(w.UpdatedAt.String()),

@@ -4,6 +4,6 @@
 provider "example.com/kelvintaywl/circleci" {
   version = "0.0.1"
   hashes = [
-    "h1:Qsgpk21nHwhva6QzaSLp+bArvw0E3svfcvpQpG8ukLc=",
+    "h1:JWjHHip1WRKBoHX2v/vJNxNAyATDiO0z9Ya01vFj05E=",
   ]
 }
