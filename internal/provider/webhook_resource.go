@@ -291,7 +291,3 @@ func (r *WebhookResource) Delete(ctx context.Context, req resource.DeleteRequest
 		return
 	}
 }
-
-// FIXME:
-// DONE: 1. verify-tls = false not recognized
-// 2. on update, ID not found somehow
