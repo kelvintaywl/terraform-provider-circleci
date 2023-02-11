@@ -9,7 +9,7 @@ require (
 	github.com/hashicorp/terraform-plugin-framework v1.1.1
 	github.com/hashicorp/terraform-plugin-go v0.14.3
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.24.1
-	github.com/kelvintaywl/circleci-webhook-go-sdk v0.0.0-20230210124729-9e02cec88ba6
+	github.com/kelvintaywl/circleci-webhook-go-sdk v1.0.0
 )
 
 require (
