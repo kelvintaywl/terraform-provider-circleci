@@ -12,11 +12,11 @@
 
 | Data Source | Status | Remarks |
 | --- | --- | --- |
-| Webhooks | In progress (70%) :construction_worker: | TODO: pagination |
+| Webhooks | In progress (90%) :construction_worker: | TODO: pagination |
 
 | Resource | Status | Remarks |
 | --- | --- | --- |
-| Webhook | In progress (10%) :construction_worker: | TODO: CRUD |
+| Webhook | In progress (50%) :construction_worker: | TODO: add tests |
 
 ## Example
 
