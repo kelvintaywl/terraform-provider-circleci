@@ -44,19 +44,14 @@ $ make tf.apply
 $ make tf.destroy
 ```
 
-### Testing locally
+## Testing
 
-**Note**: This project uses a mock server, via [Prism](https://stoplight.io/open-source/prism), in place of circleci.com.
-Refer to the [Docker Compose file](docker-compose.yml) for details.
+This uses a dummy CircleCI project for acceptance tests:
+https://github.com/kelvintaywl-cci/tf-provider-acceptance-test-dummy
 
 ```console
-
-# start mock server
-$ docker-compose up -d
-
-# wait for Nginx and Prism to be ready
-
 # Run acceptance tests
+$ export CIRCLE_TOKEN="user API token that can CRUD the dummy project"
 $ make testacc
 ```
 

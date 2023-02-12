@@ -14,15 +14,10 @@ executors:
 
 jobs:
   test:
-    executor: ubuntu2204
+    executor: go1193
     resource_class: medium
     steps:
       - checkout
-      - run:
-          name: Spin up test dependencies
-          command: docker-compose up -d
-      - go/install:
-          version: '1.19.3'
       - run:
           name: Install dependencies
           command: go mod tidy
@@ -32,24 +27,6 @@ jobs:
           environment:
             OS: linux
             ARCH: amd64
-      - run:
-          name: Wait for mock server (8080)
-          command: |
-            # Docker Compose needs to pull the images;
-            # Prism may take quite some time to initialize
-
-            N=20
-            while [ $N -gt 0 ]
-            do
-              if $(curl -s --fail -H "Circle-Token: fooBar" -o /dev/null http://127.0.0.1:8080/api/v2/webhook\?scope-id\=123e4567-e89b-12d3-a456-426614174000\&scope-type\=project); then
-                echo "Connected!"
-                exit 0
-              fi
-              echo "Not connected; retrying"
-              N=$(( $N - 1 ))
-              sleep 2
-            done
-            exit 1
       - run:
           name: Run acceptance tests
           command: make testacc
@@ -71,5 +48,8 @@ jobs:
 workflows:
   on-commit:
     jobs:
-      - test
+      - test:
+          context:
+            # required to add CIRCLE_TOKEN (for tests)
+            - ktwl41
       - docs

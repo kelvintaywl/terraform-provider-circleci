@@ -12,10 +12,8 @@ const (
 	// such as updating the Makefile and running the testing through that tool.
 	providerConfig = `
 provider "circleci" {
-  api_token    = "fooBar"
-  // see docker-compose.yml
-  hostname     = "localhost:8080"
-  https        = false
+  // api_token via CIRCLE_TOKEN env var
+  hostname = "circleci.com"
 }
 `
 )
