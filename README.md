@@ -65,6 +65,23 @@ $ make docs
 
 See [docs](docs/index.md)
 
+## Releasing
+
+Currently, we release locally with [GoReleaser](https://goreleaser.com/install/).
+The config can be found in [.goreleaser.yml](.goreleaser.yml)
+
+```console
+# tag release
+$ git tag
+
+# install GoReleaser on MacOS if required
+# See https://goreleaser.com/install/
+$ brew install goreleaser/tap/goreleaser
+
+# make a GitHub release (with artifacts),
+# via GoReleaser
+$ goreleaser release --rm-dist
+```
 
 ## Notes
 
