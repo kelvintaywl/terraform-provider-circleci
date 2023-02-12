@@ -16,6 +16,10 @@ provider "circleci" {
   hostname = "circleci.com"
 }
 `
+	// project name: github/kelvintaywl-cci/tf-provider-acceptance-test-dummy
+	projectId string = "c124cca6-d03e-4733-b84d-32b02347b78c"
+	// webhook name: added-via-ui
+	webhookId string = "8ed03fd1-5426-4138-a27d-aec0328c39fb"
 )
 
 var (
