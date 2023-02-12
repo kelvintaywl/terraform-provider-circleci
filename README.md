@@ -78,9 +78,15 @@ $ git tag
 # See https://goreleaser.com/install/
 $ brew install goreleaser/tap/goreleaser
 
+# set required env vars
+$ export GITHUB_TOKEN="your GitHub Token value, with public_repo scope required"
+$ export GPG_FINGERPRINT="your GPG fingerprint, registered to your Terraform namespace"
+# optional
+$ export GPG_TTY=$(tty)
+
 # make a GitHub release (with artifacts),
 # via GoReleaser
-$ goreleaser release --rm-dist
+$ goreleaser release --clean
 ```
 
 ## Notes

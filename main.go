@@ -26,8 +26,8 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		// TODO: Update this string with the published name of your provider.
-		Address: "example.com/kelvintaywl/circleci",
+		// Terraform registry
+		Address: "kelvintaywl/circleci",
 		Debug:   debug,
 	}
 
