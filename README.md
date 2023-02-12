@@ -71,8 +71,10 @@ Currently, we release locally with [GoReleaser](https://goreleaser.com/install/)
 The config can be found in [.goreleaser.yml](.goreleaser.yml)
 
 ```console
+# NOTE: make sure documents are generated!
+
 # tag release
-$ git tag
+$ git tag vX.Y.Z -m "some message"
 
 # install GoReleaser on MacOS if required
 # See https://goreleaser.com/install/
