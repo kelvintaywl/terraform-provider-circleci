@@ -26,8 +26,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		// Terraform registry
-		Address: "kelvintaywl/circleci",
+		Address: "registry.terraform.io/kelvintaywl/circleci",
 		Debug:   debug,
 	}
 
