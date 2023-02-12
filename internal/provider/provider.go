@@ -49,7 +49,6 @@ type CircleciAPIClient struct {
 type CircleciProviderModel struct {
 	ApiToken types.String `tfsdk:"api_token"`
 	Hostname types.String `tfsdk:"hostname"`
-	Https    types.Bool   `tfsdk:"https"`
 }
 
 func (p *CircleciProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -66,10 +65,6 @@ func (p *CircleciProvider) Schema(ctx context.Context, req provider.SchemaReques
 			},
 			"hostname": schema.StringAttribute{
 				MarkdownDescription: fmt.Sprintf("CircleCI hostname (default: %s)", defaultHostName),
-				Optional:            true,
-			},
-			"https": schema.BoolAttribute{
-				MarkdownDescription: "Use HTTPS (default: true)",
 				Optional:            true,
 			},
 		},
@@ -121,11 +116,6 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 
 	cfg := api.DefaultTransportConfig().WithHost(hostname)
 
-	// only for acceptance testing
-	if data.Https.ValueBool() == false {
-		cfg = cfg.WithSchemes([]string{"http"})
-	}
-
 	client := api.NewHTTPClientWithConfig(strfmt.Default, cfg)
 	auth := rtc.APIKeyAuth("Circle-Token", "header", apiToken)
 	apiClient := &CircleciAPIClient{
@@ -138,7 +128,6 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 }
 
 func (p *CircleciProvider) Resources(ctx context.Context) []func() resource.Resource {
-	// TODO:
 	return []func() resource.Resource{
 		NewWebhookResource,
 	}
