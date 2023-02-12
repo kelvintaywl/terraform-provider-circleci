@@ -16,7 +16,7 @@
 
 | Resource | Status | Remarks |
 | --- | --- | --- |
-| Webhook | In progress (50%) :construction_worker: | TODO: add tests |
+| Webhook | In progress (90%) :construction_worker: | TODO: support importing of state |
 
 ## Example
 
