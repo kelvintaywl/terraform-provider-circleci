@@ -25,7 +25,11 @@ See [sandbox](sandbox/main.tf)
 
 ```console
 # this project uses go 1.19
-$ go mod tiny
+$ go mod download
+
+# or, if you want to upgrade the Go dependencies too
+$ go get -u
+$ go mod tidy
 
 # to build the go binary, and "install" to your local provider directory
 # NOTE: this is a one-time action
