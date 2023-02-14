@@ -31,20 +31,6 @@ jobs:
           name: Run acceptance tests
           command: make testacc
 
-  docs:
-    executor: go1193
-    resource_class: medium
-    steps:
-      - checkout
-      - tf/install:
-          terraform_version: '1.3.7'
-      - run:
-          name: Install dependencies
-          command: go mod tidy
-      - run: make binary
-      - run: make docs
-      - run: git status
-
 workflows:
   on-commit:
     jobs:
@@ -52,4 +38,3 @@ workflows:
           context:
             # required to add CIRCLE_TOKEN (for tests)
             - ktwl41
-      - docs
