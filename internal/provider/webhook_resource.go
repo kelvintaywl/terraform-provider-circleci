@@ -221,7 +221,6 @@ func (r *WebhookResource) Update(ctx context.Context, req resource.UpdateRequest
 	}
 
 	id := plan.ID.ValueString()
-	resp.Diagnostics.AddWarning("ID", fmt.Sprintf("got: %s", id))
 
 	param := webhook.NewUpdateWebhookParamsWithContext(ctx).WithDefaults()
 	param = param.WithID(strfmt.UUID(id))
@@ -243,9 +242,8 @@ func (r *WebhookResource) Update(ctx context.Context, req resource.UpdateRequest
 	for _, event := range plan.Events {
 		body.Events = append(body.Events, event.ValueString())
 	}
-	param = param.WithBody(&body)
-	resp.Diagnostics.AddWarning("payload", fmt.Sprintf("ID: %v %s", param.ID, id))
 
+	param = param.WithBody(&body)
 	res, err := r.client.Client.Webhook.UpdateWebhook(param, r.client.Auth)
 	if err != nil {
 		resp.Diagnostics.AddError(
