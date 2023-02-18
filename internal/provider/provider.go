@@ -17,7 +17,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	api "github.com/kelvintaywl/circleci-webhook-go-sdk/client"
+	api "github.com/kelvintaywl/circleci-go-sdk/client"
 )
 
 // Ensure CircleciProvider satisfies various provider interfaces.

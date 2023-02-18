@@ -210,6 +210,8 @@ github.com/josharian/intern v1.0.0 h1:vlS4z54oSdjm0bgjRigI+G1HpF+tI+9rE5LLzOg8Hm
 github.com/josharian/intern v1.0.0/go.mod h1:5DoeVV0s6jJacbCEi61lwdGj/aVlrQvzHFFd8Hwg//Y=
 github.com/karrick/godirwalk v1.8.0/go.mod h1:H5KPZjojv4lE+QYImBI8xVtrBRgYrIVsaRPx4tDPEn4=
 github.com/karrick/godirwalk v1.10.3/go.mod h1:RoGL9dQei4vP9ilrpETWE8CLOZ1kiN0LhBygSwrAsHA=
+github.com/kelvintaywl/circleci-go-sdk v0.1.0 h1:8nLYvJ8J+UwScULL9aglMB/0bq011WBrnn9lmeAbXhA=
+github.com/kelvintaywl/circleci-go-sdk v0.1.0/go.mod h1:1KA8J0ENqWbkMzRaJ6/fxeoEbTRbdPd+vtGWJGaN7Sk=
 github.com/kelvintaywl/circleci-webhook-go-sdk v1.0.0 h1:8bt8FTXkAdM27q63nr/x4YN5y8LHTVFZd5sLRMy1DH0=
 github.com/kelvintaywl/circleci-webhook-go-sdk v1.0.0/go.mod h1:vxQQhgGRgA1xRlm3JKwgbtwrmfKy4lo2i3WQaxaIxnM=
 github.com/kevinburke/ssh_config v0.0.0-20201106050909-4977a11b4351 h1:DowS9hvgyYSX4TO5NpyC606/Z4SxnNYbT+WX27or6Ck=
