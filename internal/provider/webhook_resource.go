@@ -12,8 +12,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/kelvintaywl/circleci-webhook-go-sdk/client/webhook"
-	"github.com/kelvintaywl/circleci-webhook-go-sdk/models"
+	"github.com/kelvintaywl/circleci-go-sdk/client/webhook"
+	"github.com/kelvintaywl/circleci-go-sdk/models"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces
