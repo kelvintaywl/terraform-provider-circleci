@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"regexp"
 
 	"github.com/go-openapi/strfmt"
 
@@ -10,7 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 
 	"github.com/kelvintaywl/circleci-go-sdk/client/webhook"
 	"github.com/kelvintaywl/circleci-go-sdk/models"
@@ -37,6 +42,11 @@ type WebhookResourceModel struct {
 	ProjectID     types.String   `tfsdk:"project_id"`
 	VerifyTLS     types.Bool     `tfsdk:"verify_tls"`
 	Events        []types.String `tfsdk:"events"`
+}
+
+var vEvents = []string{
+	"jobs-completed",
+	"workflow-completed",
 }
 
 func (r *WebhookResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -69,6 +79,11 @@ func (r *WebhookResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 			"url": schema.StringAttribute{
 				MarkdownDescription: "URL to deliver the webhook to. Note: protocol must be included as well (only https is supported)",
 				Required:            true,
+				Validators: []validator.String{
+					stringvalidator.RegexMatches(
+						regexp.MustCompile(`^https:\/\/.+`),
+						"must start with https://"),
+				},
 			},
 			"signing_secret": schema.StringAttribute{
 				MarkdownDescription: "Secret used to build an HMAC hash of the payload and passed as a header in the webhook request",
@@ -84,10 +99,13 @@ func (r *WebhookResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 				Required:            true,
 			},
 			"events": schema.ListAttribute{
-				// TODO: consider validation here?
 				MarkdownDescription: "Events that will trigger the webhook",
 				ElementType:         types.StringType,
 				Required:            true,
+				Validators: []validator.List{
+					listvalidator.ValueStringsAre(stringvalidator.OneOf(vEvents...)),
+					listvalidator.UniqueValues(),
+				},
 			},
 		},
 	}
