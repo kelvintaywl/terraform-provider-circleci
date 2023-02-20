@@ -306,20 +306,7 @@ func (r *ScheduleResource) Read(ctx context.Context, req resource.ReadRequest, r
 	}
 }
 
-// Create creates the resource and sets the initial Terraform state.
-func (r *ScheduleResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	// Retrieve values from plan
-	var plan ScheduleResourceModel
-	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	param := schedule.NewAddScheduleParamsWithContext(ctx).WithDefaults()
-	project := plan.ProjectSlug.ValueString()
-	param = param.WithProjectSlug(project)
-
+func makeUpsertBodyPayload(plan ScheduleResourceModel) (models.SchedulePayload, string, error) {
 	name := plan.Name.ValueString()
 	desc := plan.Description.ValueString()
 	actor := plan.AttributionActor.ValueString()
@@ -360,10 +347,11 @@ func (r *ScheduleResource) Create(ctx context.Context, req resource.CreateReques
 	tag := plan.Tag.ValueString()
 	blob := []byte(plan.PipelineParameters.ValueString())
 	p := make(map[string]interface{})
-	err := json.Unmarshal(blob, &p)
-	if err != nil {
-		resp.Diagnostics.AddError("Encountered error unmarshalling parameters from JSON", fmt.Sprintf("%s", err))
-		return
+	if len(blob) > 0 {
+		err := json.Unmarshal(blob, &p)
+		if err != nil {
+			return models.SchedulePayload{}, "Encountered error unmarshalling parameters from JSON", err
+		}
 	}
 	pipelineParams := models.ScheduleBaseDataParameters{
 		Branch:                     branch,
@@ -378,6 +366,28 @@ func (r *ScheduleResource) Create(ctx context.Context, req resource.CreateReques
 			Parameters:  &pipelineParams,
 			Timetable:   &tt,
 		},
+	}
+	return payload, "", nil
+}
+
+// Create creates the resource and sets the initial Terraform state.
+func (r *ScheduleResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	// Retrieve values from plan
+	var plan ScheduleResourceModel
+	diags := req.Plan.Get(ctx, &plan)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	param := schedule.NewAddScheduleParamsWithContext(ctx).WithDefaults()
+	project := plan.ProjectSlug.ValueString()
+	param = param.WithProjectSlug(project)
+
+	payload, errStr, err := makeUpsertBodyPayload(plan)
+	if err != nil {
+		resp.Diagnostics.AddError(errStr, fmt.Sprintf("%s", err))
+		return
 	}
 
 	param = param.WithBody(&payload)
@@ -417,64 +427,10 @@ func (r *ScheduleResource) Update(ctx context.Context, req resource.UpdateReques
 	param := schedule.NewUpdateScheduleParamsWithContext(ctx).WithDefaults()
 	param = param.WithID(strfmt.UUID(id))
 
-	name := plan.Name.ValueString()
-	desc := plan.Description.ValueString()
-	actor := plan.AttributionActor.ValueString()
-
-	// timetable
-	perhour := plan.Timetable.PerHour.ValueInt64()
-	tt := models.ScheduleBaseDataTimetable{
-		PerHour: &perhour,
-	}
-	for _, h := range plan.Timetable.HoursOfDay {
-		hourOfDay := models.HourOfADay(h.ValueInt64())
-		tt.HoursOfDay = append(tt.HoursOfDay, &hourOfDay)
-	}
-	for _, m := range plan.Timetable.Months {
-		month := models.Month(m.ValueString())
-		tt.Months = append(tt.Months, month)
-	}
-	if len(plan.Timetable.DaysOfWeek) > 0 {
-		for _, dw := range plan.Timetable.DaysOfWeek {
-			dayOfWeek := models.DayOfAWeek(dw.ValueString())
-			tt.DaysOfWeek = append(tt.DaysOfWeek, dayOfWeek)
-		}
-	} else {
-		tt.DaysOfWeek = make([]models.DayOfAWeek, 0)
-	}
-
-	if len(plan.Timetable.DaysOfMonth) > 0 {
-		for _, dm := range plan.Timetable.DaysOfMonth {
-			dayOfMonth := models.DayOfAMonth(dm.ValueInt64())
-			tt.DaysOfMonth = append(tt.DaysOfMonth, dayOfMonth)
-		}
-	} else {
-		tt.DaysOfMonth = make([]models.DayOfAMonth, 0)
-	}
-
-	// pipeline params
-	branch := plan.Branch.ValueString()
-	tag := plan.Tag.ValueString()
-	blob := []byte(plan.PipelineParameters.ValueString())
-	p := make(map[string]interface{})
-	err := json.Unmarshal(blob, &p)
+	payload, errStr, err := makeUpsertBodyPayload(plan)
 	if err != nil {
-		resp.Diagnostics.AddError("Encountered error unmarshalling parameters from JSON", fmt.Sprintf("%s", err))
+		resp.Diagnostics.AddError(errStr, fmt.Sprintf("%s", err))
 		return
-	}
-	pipelineParams := models.ScheduleBaseDataParameters{
-		Branch:                     branch,
-		Tag:                        tag,
-		ScheduleBaseDataParameters: p,
-	}
-	payload := models.SchedulePayload{
-		AttributionActor: actor,
-		ScheduleBaseData: models.ScheduleBaseData{
-			Description: desc,
-			Name:        name,
-			Parameters:  &pipelineParams,
-			Timetable:   &tt,
-		},
 	}
 
 	param = param.WithBody(&payload)
