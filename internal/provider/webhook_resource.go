@@ -45,7 +45,7 @@ type WebhookResourceModel struct {
 }
 
 var vEvents = []string{
-	"jobs-completed",
+	"job-completed",
 	"workflow-completed",
 }
 
