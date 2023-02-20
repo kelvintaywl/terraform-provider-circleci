@@ -130,6 +130,7 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 func (p *CircleciProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewWebhookResource,
+		NewScheduleResource,
 	}
 }
 
