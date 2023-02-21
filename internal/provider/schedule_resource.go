@@ -199,7 +199,7 @@ func (r *ScheduleResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 					},
 					"months": schema.ListAttribute{
 						ElementType:         types.StringType,
-						MarkdownDescription: "Months in which the schedule triggers.",
+						MarkdownDescription: "Months in which the schedule triggers. Defaults to all months if not set.",
 						Optional:            true,
 						Validators: []validator.List{
 							listvalidator.ValueStringsAre(stringvalidator.OneOf(vMonths...)),
@@ -320,9 +320,15 @@ func makeUpsertBodyPayload(plan ScheduleResourceModel) (models.SchedulePayload, 
 		hourOfDay := models.HourOfADay(h.ValueInt64())
 		tt.HoursOfDay = append(tt.HoursOfDay, &hourOfDay)
 	}
-	for _, m := range plan.Timetable.Months {
-		month := models.Month(m.ValueString())
-		tt.Months = append(tt.Months, month)
+
+	// optional attributes
+	if len(plan.Timetable.Months) > 0 {
+		for _, m := range plan.Timetable.Months {
+			month := models.Month(m.ValueString())
+			tt.Months = append(tt.Months, month)
+		}
+	} else {
+		tt.Months = make([]models.Month, 0)
 	}
 	if len(plan.Timetable.DaysOfWeek) > 0 {
 		for _, dw := range plan.Timetable.DaysOfWeek {
