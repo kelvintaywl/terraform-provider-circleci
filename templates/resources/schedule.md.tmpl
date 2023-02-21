@@ -1,0 +1,26 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.Name}} ({{.Type}})
+
+{{ .Description | trimspace }}
+
+Please see [the official CircleCI documentation for more information](https://circleci.com/docs/scheduled-pipelines/).
+
+## Example Usage
+
+### Weekly schedule
+
+{{ tffile "examples/resources/schedule/monday_weekly.tf" }}
+
+### Specific days of the month
+
+This example showcases how to set up the pipeline parameters using `jsonencode` as well.
+
+{{ tffile "examples/resources/schedule/specific_days_months.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
