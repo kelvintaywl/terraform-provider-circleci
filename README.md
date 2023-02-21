@@ -16,6 +16,7 @@
 | Resource | Status | Remarks |
 | --- | --- | --- |
 | Webhook | In progress (90%) :construction_worker: | TODO: support importing of state |
+| Schedule | In progress (90%) :construction_worker: | TODO: support importing of state |
 
 ## Example
 
@@ -97,8 +98,8 @@ $ goreleaser release --clean
 
 ## Notes
 
-This depends on a CircleCI webhook Go SDK I (auto) generated:
-https://github.com/kelvintaywl/circleci-webhook-go-sdk
+This depends on a CircleCI Go SDK I (auto) generated:
+https://github.com/kelvintaywl/circleci-go-sdk
 
 
 ## Why this is taking longer than I expected
