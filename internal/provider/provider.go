@@ -138,5 +138,6 @@ func (p *CircleciProvider) Resources(ctx context.Context) []func() resource.Reso
 func (p *CircleciProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewWebhooksDataSource,
+		NewProjectDataSource,
 	}
 }
