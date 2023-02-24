@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.0] - 2023-02-21
+
+### Added
+
+- Support project environment variable as resource
+
 ## [0.3.1] - 2023-02-21
 
 ### Added
