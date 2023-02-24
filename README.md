@@ -12,6 +12,7 @@
 | Data Source | Status | Remarks |
 | --- | --- | --- |
 | Webhooks | In progress (90%) :construction_worker: | TODO: pagination |
+| Project | Done :white_check_mark: | |
 
 | Resource | Status | Remarks |
 | --- | --- | --- |
