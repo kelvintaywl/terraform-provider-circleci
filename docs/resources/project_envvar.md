@@ -38,3 +38,7 @@ resource "circleci_project_envvar" "project_envvar_foobar_fizzbuzz" {
 - `name` (String) The name of the environment variable
 - `project_slug` (String) The project-slug for the environment variable
 - `value` (String, Sensitive) The value of the environment variable
+
+### Read-Only
+
+- `id` (String) Read-only unique identifier, set as {project_slug}/{name}
