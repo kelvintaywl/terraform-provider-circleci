@@ -1,6 +1,12 @@
 # Changelog
 
-## [0.4.0] - 2023-02-21
+## [0.5.0] - 2023-02-25
+
+### Added
+
+- Support project as data source
+
+## [0.4.0] - 2023-02-24
 
 ### Added
 
