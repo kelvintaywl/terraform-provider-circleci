@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/kelvintaywl/circleci-go-sdk/client/project_envvar"
+	"github.com/kelvintaywl/circleci-go-sdk/client/project"
 	"github.com/kelvintaywl/circleci-go-sdk/models"
 )
 
@@ -92,10 +92,10 @@ func (r *ProjectEnvVarResource) Read(ctx context.Context, req resource.ReadReque
 
 	name := state.Name.ValueString()
 	projectSlug := state.ProjectSlug.ValueString()
-	param := project_envvar.NewGetProjectEnvVarParamsWithContext(ctx).WithDefaults()
+	param := project.NewGetProjectEnvVarParamsWithContext(ctx).WithDefaults()
 	param = param.WithProjectSlug(projectSlug).WithName(name)
 
-	_, err := r.client.Client.ProjectEnvvar.GetProjectEnvVar(param, r.client.Auth)
+	_, err := r.client.Client.Project.GetProjectEnvVar(param, r.client.Auth)
 	if err != nil {
 		resp.Diagnostics.AddError(fmt.Sprintf("Encountered error reading Project(%s) Env Var %s", projectSlug, name), fmt.Sprintf("%s", err))
 		return
@@ -121,7 +121,7 @@ func (r *ProjectEnvVarResource) Create(ctx context.Context, req resource.CreateR
 	}
 
 	projectSlug := plan.ProjectSlug.ValueString()
-	param := project_envvar.NewAddProjectEnvVarParamsWithContext(ctx).WithDefaults()
+	param := project.NewAddProjectEnvVarParamsWithContext(ctx).WithDefaults()
 	param = param.WithProjectSlug(projectSlug)
 
 	name := plan.Name.ValueString()
@@ -133,7 +133,7 @@ func (r *ProjectEnvVarResource) Create(ctx context.Context, req resource.CreateR
 
 	param = param.WithBody(&body)
 
-	_, err := r.client.Client.ProjectEnvvar.AddProjectEnvVar(param, r.client.Auth)
+	_, err := r.client.Client.Project.AddProjectEnvVar(param, r.client.Auth)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error creating project env var",
@@ -163,10 +163,10 @@ func (r *ProjectEnvVarResource) Update(ctx context.Context, req resource.UpdateR
 	projectSlug := plan.ProjectSlug.ValueString()
 	name := plan.Name.ValueString()
 
-	deleteParam := project_envvar.NewDeleteProjectEnvVarParamsWithContext(ctx).WithDefaults()
+	deleteParam := project.NewDeleteProjectEnvVarParamsWithContext(ctx).WithDefaults()
 	deleteParam = deleteParam.WithProjectSlug(projectSlug).WithName(name)
 
-	_, err := r.client.Client.ProjectEnvvar.DeleteProjectEnvVar(deleteParam, r.client.Auth)
+	_, err := r.client.Client.Project.DeleteProjectEnvVar(deleteParam, r.client.Auth)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting project env var",
@@ -181,11 +181,11 @@ func (r *ProjectEnvVarResource) Update(ctx context.Context, req resource.UpdateR
 		Value: &value,
 	}
 
-	addParam := project_envvar.NewAddProjectEnvVarParamsWithContext(ctx).WithDefaults()
+	addParam := project.NewAddProjectEnvVarParamsWithContext(ctx).WithDefaults()
 	addParam = addParam.WithProjectSlug(projectSlug)
 	addParam = addParam.WithBody(&body)
 
-	_, err = r.client.Client.ProjectEnvvar.AddProjectEnvVar(addParam, r.client.Auth)
+	_, err = r.client.Client.Project.AddProjectEnvVar(addParam, r.client.Auth)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error recreating project env var",
@@ -215,10 +215,10 @@ func (r *ProjectEnvVarResource) Delete(ctx context.Context, req resource.DeleteR
 	name := state.Name.ValueString()
 	projectSlug := state.ProjectSlug.ValueString()
 
-	param := project_envvar.NewDeleteProjectEnvVarParamsWithContext(ctx).WithDefaults()
+	param := project.NewDeleteProjectEnvVarParamsWithContext(ctx).WithDefaults()
 	param = param.WithProjectSlug(projectSlug).WithName(name)
 
-	_, err := r.client.Client.ProjectEnvvar.DeleteProjectEnvVar(param, r.client.Auth)
+	_, err := r.client.Client.Project.DeleteProjectEnvVar(param, r.client.Auth)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting project env var",
