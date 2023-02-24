@@ -27,6 +27,7 @@ type ProjectEnvVarResourceModel struct {
 	ProjectSlug types.String `tfsdk:"project_slug"`
 	Name        types.String `tfsdk:"name"`
 	Value       types.String `tfsdk:"value"`
+	Id          types.String `tfsdk:"id"`
 }
 
 func (r *ProjectEnvVarResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -37,6 +38,10 @@ func (r *ProjectEnvVarResource) Schema(_ context.Context, _ resource.SchemaReque
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Manages a project environment variable",
 		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				MarkdownDescription: "Read-only unique identifier, set as {project_slug}/{name}",
+				Computed:            true,
+			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "The name of the environment variable",
 				Required:            true,
@@ -96,6 +101,7 @@ func (r *ProjectEnvVarResource) Read(ctx context.Context, req resource.ReadReque
 		return
 	}
 
+	state.Id = types.StringValue(fmt.Sprintf("%s/%s", projectSlug, name))
 	// Set refreshed state
 	diags = resp.State.Set(ctx, &state)
 	resp.Diagnostics.Append(diags...)
@@ -136,6 +142,7 @@ func (r *ProjectEnvVarResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 
+	plan.Id = types.StringValue(fmt.Sprintf("%s/%s", projectSlug, name))
 	// Set state to fully populated data
 	diags = resp.State.Set(ctx, plan)
 	resp.Diagnostics.Append(diags...)
@@ -187,6 +194,7 @@ func (r *ProjectEnvVarResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 
+	plan.Id = types.StringValue(fmt.Sprintf("%s/%s", projectSlug, name))
 	// Set state to fully populated data
 	diags = resp.State.Set(ctx, plan)
 	resp.Diagnostics.Append(diags...)
