@@ -17,6 +17,7 @@
 | --- | --- | --- |
 | Webhook | In progress (90%) :construction_worker: | TODO: support importing of state |
 | Schedule | In progress (90%) :construction_worker: | TODO: support importing of state |
+| Project Environment Variable | Done :white_check_mark: | |
 
 ## Example
 
