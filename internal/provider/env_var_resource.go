@@ -13,28 +13,28 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces
-var _ resource.Resource = &ProjectEnvVarResource{}
+var _ resource.Resource = &EnvVarResource{}
 
-func NewProjectEnvVarResource() resource.Resource {
-	return &ProjectEnvVarResource{}
+func NewEnvVarResource() resource.Resource {
+	return &EnvVarResource{}
 }
 
-type ProjectEnvVarResource struct {
+type EnvVarResource struct {
 	client *CircleciAPIClient
 }
 
-type ProjectEnvVarResourceModel struct {
+type EnvVarResourceModel struct {
 	ProjectSlug types.String `tfsdk:"project_slug"`
 	Name        types.String `tfsdk:"name"`
 	Value       types.String `tfsdk:"value"`
 	Id          types.String `tfsdk:"id"`
 }
 
-func (r *ProjectEnvVarResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_project_envvar"
+func (r *EnvVarResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_env_var"
 }
 
-func (r *ProjectEnvVarResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *EnvVarResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Manages a project environment variable",
 		Attributes: map[string]schema.Attribute{
@@ -60,7 +60,7 @@ func (r *ProjectEnvVarResource) Schema(_ context.Context, _ resource.SchemaReque
 }
 
 // Configure adds the provider configured client to the data source.
-func (r *ProjectEnvVarResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *EnvVarResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -81,9 +81,9 @@ func (r *ProjectEnvVarResource) Configure(_ context.Context, req resource.Config
 }
 
 // Read refreshes the Terraform state with the latest data.
-func (r *ProjectEnvVarResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *EnvVarResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	// Get current state
-	var state ProjectEnvVarResourceModel
+	var state EnvVarResourceModel
 	diags := req.State.Get(ctx, &state)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -111,9 +111,9 @@ func (r *ProjectEnvVarResource) Read(ctx context.Context, req resource.ReadReque
 }
 
 // Create creates the resource and sets the initial Terraform state.
-func (r *ProjectEnvVarResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *EnvVarResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	// Retrieve values from plan
-	var plan ProjectEnvVarResourceModel
+	var plan EnvVarResourceModel
 	diags := req.Plan.Get(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -151,9 +151,9 @@ func (r *ProjectEnvVarResource) Create(ctx context.Context, req resource.CreateR
 	}
 }
 
-func (r *ProjectEnvVarResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *EnvVarResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	// Retrieve values from plan
-	var plan ProjectEnvVarResourceModel
+	var plan EnvVarResourceModel
 	diags := req.Plan.Get(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -203,9 +203,9 @@ func (r *ProjectEnvVarResource) Update(ctx context.Context, req resource.UpdateR
 	}
 }
 
-func (r *ProjectEnvVarResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+func (r *EnvVarResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	// Retrieve values from state
-	var state ProjectEnvVarResourceModel
+	var state EnvVarResourceModel
 	diags := req.State.Get(ctx, &state)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
