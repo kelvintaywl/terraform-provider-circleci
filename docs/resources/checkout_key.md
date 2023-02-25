@@ -11,7 +11,7 @@ Manages a project checkout key
 
 **Note**: Checkout keys cannot be updated.
 
-There is no update API endpoints for modifying an existing checkout key.
+If you modify the `type`, this will delete the existing checkout key and recreate one instead.
 
 In addition, there can be only 1 preferred checkout key for a project.
 As such, when creating multiple checkout keys, the latest key will become the preferred.

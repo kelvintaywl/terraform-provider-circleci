@@ -14,13 +14,12 @@ Please see [the official CircleCI V2 API documentation for schema requirements](
 ## Example Usage
 
 ```terraform
-locals {
-  // Replace this with your CircleCI project ID
-  project_id = "c124cca6-d03e-4733-b84d-32b02347b78c"
+data "circleci_project" "my_project" {
+  slug = "github/acmeorg/foobar"
 }
 
 resource "circleci_webhook" "my_webhook" {
-  project_id     = local.project_id
+  project_id     = data.circleci_project.my_project.id
   name           = "my_webhook"
   url            = "https://example.com/hook"
   signing_secret = "5uperSeCr3t!"
