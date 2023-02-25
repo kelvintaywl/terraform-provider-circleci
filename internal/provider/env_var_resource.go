@@ -6,6 +6,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/kelvintaywl/circleci-go-sdk/client/project"
@@ -41,6 +43,10 @@ func (r *EnvVarResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 			"id": schema.StringAttribute{
 				MarkdownDescription: "Read-only unique identifier, set as {project_slug}/{name}",
 				Computed:            true,
+				// unchanged even during updates
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "The name of the environment variable",
@@ -50,6 +56,10 @@ func (r *EnvVarResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 				MarkdownDescription: "The value of the environment variable",
 				Required:            true,
 				Sensitive:           true,
+				// if modifed, this requires a replacement instead.
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"project_slug": schema.StringAttribute{
 				MarkdownDescription: "The project-slug for the environment variable",
@@ -155,55 +165,7 @@ func (r *EnvVarResource) Create(ctx context.Context, req resource.CreateRequest,
 }
 
 func (r *EnvVarResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	// Retrieve values from plan
-	var plan EnvVarResourceModel
-	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	projectSlug := plan.ProjectSlug.ValueString()
-	name := plan.Name.ValueString()
-
-	deleteParam := project.NewDeleteProjectEnvVarParamsWithContext(ctx).WithDefaults()
-	deleteParam = deleteParam.WithProjectSlug(projectSlug).WithName(name)
-
-	_, err := r.client.Client.Project.DeleteProjectEnvVar(deleteParam, r.client.Auth)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			"Error deleting project env var",
-			fmt.Sprintf("Could not delete project(%s) env var %s, unexpected error: %s", projectSlug, name, err.Error()),
-		)
-		return
-	}
-
-	value := plan.Value.ValueString()
-	body := models.ProjectEnvVarPayload{
-		Name:  &name,
-		Value: &value,
-	}
-
-	addParam := project.NewAddProjectEnvVarParamsWithContext(ctx).WithDefaults()
-	addParam = addParam.WithProjectSlug(projectSlug)
-	addParam = addParam.WithBody(&body)
-
-	_, err = r.client.Client.Project.AddProjectEnvVar(addParam, r.client.Auth)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			"Error recreating project env var",
-			fmt.Sprintf("Could not recreate project env var, unexpected error: %s", err.Error()),
-		)
-		return
-	}
-
-	plan.Id = types.StringValue(fmt.Sprintf("%s/%s", projectSlug, name))
-	// Set state to fully populated data
-	diags = resp.State.Set(ctx, plan)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
+	// not implemented; requires a replacement
 }
 
 func (r *EnvVarResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {

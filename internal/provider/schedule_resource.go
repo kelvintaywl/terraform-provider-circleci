@@ -117,6 +117,10 @@ func (r *ScheduleResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 			"created_at": schema.StringAttribute{
 				MarkdownDescription: "The date and time the schedule was created",
 				Computed:            true,
+				// unchanged even during updates
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 			"updated_at": schema.StringAttribute{
 				MarkdownDescription: "The date and time the schedule was last updated",

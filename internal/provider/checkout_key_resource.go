@@ -6,6 +6,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
@@ -52,6 +54,10 @@ func (r *CheckoutKeyResource) Schema(_ context.Context, _ resource.SchemaRequest
 			"id": schema.StringAttribute{
 				MarkdownDescription: "Read-only unique identifier: uses fingerprint",
 				Computed:            true,
+				// unchanged even during updates
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 			"project_slug": schema.StringAttribute{
 				MarkdownDescription: "The project-slug for the environment variable",
@@ -62,6 +68,10 @@ func (r *CheckoutKeyResource) Schema(_ context.Context, _ resource.SchemaRequest
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf(vKeyTypes...),
+				},
+				// if modifed, this requires a replacement instead.
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"public_key": schema.StringAttribute{
@@ -79,6 +89,10 @@ func (r *CheckoutKeyResource) Schema(_ context.Context, _ resource.SchemaRequest
 			"created_at": schema.StringAttribute{
 				MarkdownDescription: "The date and time the checkout key was created",
 				Computed:            true,
+				// unchanged even during updates
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 		},
 	}
@@ -198,23 +212,7 @@ func (r *CheckoutKeyResource) Create(ctx context.Context, req resource.CreateReq
 }
 
 func (r *CheckoutKeyResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	// Retrieve values from plan
-	var plan CheckoutKeyResourceModel
-	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	// IMPORTANT:
-	// we do not support Update on checkout keys.
-	// this is because you cannot update a checkout key on CircleCI;
-	// you can create, read and delete, but there is not effective operation to "update" an existing SSH key
-	resp.Diagnostics.AddError(
-		"Error updating project checkout key (skipped update)",
-		"Project checkout keys cannot be updated.",
-	)
-	return
+	// not implemented; requires a replacement
 }
 
 func (r *CheckoutKeyResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {

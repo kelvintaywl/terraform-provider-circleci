@@ -67,6 +67,10 @@ func (r *WebhookResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 			"created_at": schema.StringAttribute{
 				MarkdownDescription: "The date and time the webhook was created",
 				Computed:            true,
+				// unchanged even during updates
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 			"updated_at": schema.StringAttribute{
 				MarkdownDescription: "The date and time the webhook was last updated",
