@@ -13,12 +13,14 @@
 | --- | --- | --- |
 | Webhooks | In progress (90%) :construction_worker: | TODO: pagination |
 | Project | Done :white_check_mark: | |
+| Checkout keys | Done :white_check_mark: | |
 
 | Resource | Status | Remarks |
 | --- | --- | --- |
 | Webhook | In progress (90%) :construction_worker: | TODO: support importing of state |
 | Schedule | In progress (90%) :construction_worker: | TODO: support importing of state |
 | Project Environment Variable | Done :white_check_mark: | |
+| Checkout key | Done :white_check_mark: | |
 
 ## Example
 
