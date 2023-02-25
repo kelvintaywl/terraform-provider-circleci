@@ -132,6 +132,7 @@ func (p *CircleciProvider) Resources(ctx context.Context) []func() resource.Reso
 		NewWebhookResource,
 		NewScheduleResource,
 		NewEnvVarResource,
+		NewCheckoutKeyResource,
 	}
 }
 
