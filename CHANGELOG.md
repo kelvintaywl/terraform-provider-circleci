@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.7.1] - 2023-02-26
+
+### Added
+
+- Log warning about users needed to delete public key of checkout keys in VCS
+
+### Changed
+
+- Refactored handling of unchanged attributes when updating
+- Refactored handling of resources that do not support updates (env_var, checkout_key)
+
 ## [0.7.0] - 2023-02-25
 
 ### Added
