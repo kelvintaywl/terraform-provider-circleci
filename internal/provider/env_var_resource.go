@@ -102,6 +102,9 @@ func (r *EnvVarResource) Read(ctx context.Context, req resource.ReadRequest, res
 	}
 
 	state.Id = types.StringValue(fmt.Sprintf("%s/%s", projectSlug, name))
+	// CircleCI returns the value masked (except the last 4 characters)
+	// Hence, we do not refresh the state explicitly
+
 	// Set refreshed state
 	diags = resp.State.Set(ctx, &state)
 	resp.Diagnostics.Append(diags...)
