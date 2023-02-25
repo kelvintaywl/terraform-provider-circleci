@@ -132,12 +132,14 @@ func (p *CircleciProvider) Resources(ctx context.Context) []func() resource.Reso
 		NewWebhookResource,
 		NewScheduleResource,
 		NewEnvVarResource,
+		NewCheckoutKeyResource,
 	}
 }
 
 func (p *CircleciProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		NewWebhooksDataSource,
 		NewProjectDataSource,
+		NewWebhooksDataSource,
+		NewCheckoutKeysDataSource,
 	}
 }

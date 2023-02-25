@@ -1,0 +1,32 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.Name}} ({{.Type}})
+
+{{ .Description | trimspace }}
+
+**Note**: Checkout keys cannot be updated.
+
+There is no update API endpoints for modifying an existing checkout key.
+
+In addition, there can be only 1 preferred checkout key for a project.
+As such, when creating multiple checkout keys, the latest key will become the preferred.
+This can cause a drift in state for the older key, in terms of `preferred` attribute.
+
+## Creating User keys
+
+When creating user keys for the first time, you need to **authorize CircleCI with GitHub** for GitHub projects.
+Otherwise, the CircleCI API will return a HTTP 500.
+
+Please see the CircleCI support article below for more information:
+https://support.circleci.com/hc/en-us/articles/360006975013-Troubleshooting-An-internal-server-error-occurred-Create-User-Keys-with-the-API
+
+## Example Usage
+
+{{ tffile "examples/resources/checkout_key/resource.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}

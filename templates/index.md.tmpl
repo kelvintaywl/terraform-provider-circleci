@@ -15,6 +15,7 @@ Currently, the following resources are supported:
 - [Project Webhook](https://circleci.com/docs/webhooks/)
 - [Project Scheduled Pipeline](https://circleci.com/docs/scheduled-pipelines/)
 - [Project Environment Variables](https://circleci.com/docs/set-environment-variable/#set-an-environment-variable-in-a-project)
+- Project Checkout key
 
 Use the navigation to the left to read about the available resources.
 

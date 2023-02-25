@@ -115,7 +115,7 @@ func (d *ProjectDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		return
 	}
 
-	param := project.NewGetProjectParams().WithDefaults()
+	param := project.NewGetProjectParamsWithContext(ctx).WithDefaults()
 	param = param.WithProjectSlug(data.Slug.ValueString())
 
 	res, err := d.client.Client.Project.GetProject(param, d.client.Auth)
