@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0] - 2023-02-25
+
+### Added
+
+- Support checkout keys as data source
+- Support checkout key as resource
+
 ## [0.6.0] - 2023-02-25
 
 ### Changed
