@@ -17,6 +17,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
+
 	api "github.com/kelvintaywl/circleci-go-sdk/client"
 )
 
@@ -106,12 +108,8 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 
 	if hostname == "" {
 		hostname = defaultHostName
-		resp.Diagnostics.AddWarning(
-			"Missing CircleCI API hostname configuration",
-			"While configuring the provider, the CircleCI API hostname was not found in "+
-				"the CIRCLE_HOSTNAME environment variable or provider "+
-				fmt.Sprintf("configuration block hostname attribute.\nUsing default: %s", hostname),
-		)
+		tflog.Info(ctx, fmt.Sprintf("Using default value for hostname: %s", hostname))
+
 	}
 
 	cfg := api.DefaultTransportConfig().WithHost(hostname)
