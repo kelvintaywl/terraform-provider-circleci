@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.0] - 2023-02-25
+
+### Changed
+
+- **BREAKING** Refactored project environment variable (resource) to `env_var`
+
 ## [0.5.0] - 2023-02-25
 
 ### Added

@@ -1,32 +1,27 @@
 ---
-page_title: "circleci_project_envvar Resource - terraform-provider-circleci"
+page_title: "circleci_env_var Resource - terraform-provider-circleci"
 subcategory: ""
 description: |-
   Manages a project environment variable
 ---
 
-# circleci_project_envvar (Resource)
+# circleci_env_var (Resource)
 
 Manages a project environment variable
 
 ## Example Usage
 
 ```terraform
-locals {
-  // Replace this with your CircleCI project slug
+# using for_each to generate multiple env var resources
+resource "circleci_env_var" "my_env_vars" {
+  for_each = {
+    "FOOBAR"   = "0Cme2FmlXk"
+    "FIZZBUZZ" = "Vbt2efixZAkrmTYiirhd"
+  }
+
   project_slug = "github/acmeorg/foobar"
-}
-
-resource "circleci_project_envvar" "project_envvar_foobar" {
-  project_slug = local.project_slug
-  name         = "FOOBAR"
-  value        = "0Cme2FmlXk"
-}
-
-resource "circleci_project_envvar" "project_envvar_foobar_fizzbuzz" {
-  project_slug = local.project_slug
-  name         = "FIZZBUZZ"
-  value        = "Vbt2efixZAkrmTYiirhd"
+  name         = each.key
+  value        = each.value
 }
 ```
 
