@@ -1,0 +1,29 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.Name}} ({{.Type}})
+
+{{ .Description | trimspace }}
+
+Creating a context for an account is only supported in CircleCI Server (self-hosted) instance.
+A _warning_ message is printed to remind users about this, if owner type is selected as `account`.
+You can observe this message by varying the `TF_LOG` value.
+
+## Example Usage
+
+{{ tffile "examples/resources/context/resource.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+**Note**: Import is currently not supported.
+
+This is because, given a context ID, we cannot get all of the context's details.
+
+The GetContext API does not return the owner information.
+See https://circleci.com/docs/api/v2/index.html#operation/getContext

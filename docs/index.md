@@ -16,6 +16,7 @@ Currently, the following resources are supported:
 - [Project Scheduled Pipeline](https://circleci.com/docs/scheduled-pipelines/)
 - [Project Environment Variables](https://circleci.com/docs/set-environment-variable/#set-an-environment-variable-in-a-project)
 - Project Checkout key
+- [Context](https://circleci.com/docs/contexts/)
 
 Use the navigation to the left to read about the available resources.
 
