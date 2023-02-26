@@ -15,7 +15,13 @@ Currently, the following resources are supported:
 - [Project Webhook](https://circleci.com/docs/webhooks/)
 - [Project Scheduled Pipeline](https://circleci.com/docs/scheduled-pipelines/)
 - [Project Environment Variables](https://circleci.com/docs/set-environment-variable/#set-an-environment-variable-in-a-project)
-- Project Checkout key
+- [Project Checkout key](https://circleci.com/docs/github-integration/#deploy-keys-and-user-keys)
+
+The following data sources are supported:
+
+- Project
+- Project Webhooks
+- Project Checkout keys
 
 Use the navigation to the left to read about the available resources.
 
@@ -39,5 +45,5 @@ provider "circleci" {
 
 ### Optional
 
-- `api_token` (String) CircleCI User API token
-- `hostname` (String) CircleCI hostname (default: circleci.com)
+- `api_token` (String) A CircleCI user API token. This can also be set via the `CIRCLE_TOKEN` environment variable.
+- `hostname` (String) CircleCI hostname (default: circleci.com). This can also be set via the `CIRCLE_HOSTNAME` environment variable.

@@ -2,6 +2,8 @@
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/kelvintaywl-cci/terraform-provider-circleci/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/kelvintaywl-cci/terraform-provider-circleci/tree/main)
 
+https://registry.terraform.io/providers/kelvintaywl/circleci/latest
+
 ## Support status
 
 | Provider Block | Status | Remarks |
