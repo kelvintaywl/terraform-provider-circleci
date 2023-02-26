@@ -100,3 +100,11 @@ Optional:
 - `days_of_month` (List of Number) Days in a month in which the schedule triggers. This is mutually exclusive with days in a week.
 - `days_of_week` (List of String) Days in a week in which the schedule triggers.
 - `months` (List of String) Months in which the schedule triggers. Defaults to all months if not set.
+
+## Import
+
+An existing schedule can be imported via its unique ID (UUID).
+
+```console
+$ terraform import circleci_schedule.my_schedule "<UUID>"
+```

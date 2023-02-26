@@ -19,8 +19,8 @@ https://registry.terraform.io/providers/kelvintaywl/circleci/latest
 
 | Resource | Status | Remarks |
 | --- | --- | --- |
-| Webhook | In progress (90%) :construction_worker: | TODO: support importing of state |
-| Schedule | In progress (90%) :construction_worker: | TODO: support importing of state |
+| Webhook | Done :white_check_mark: | |
+| Schedule | Done :white_check_mark: | |
 | Project Environment Variable | Done :white_check_mark: | |
 | Checkout key | Done :white_check_mark: | |
 

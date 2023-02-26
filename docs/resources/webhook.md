@@ -54,3 +54,11 @@ output "webhooks" {
 - `created_at` (String) The date and time the webhook was created
 - `id` (String) The unique ID of the webhook
 - `updated_at` (String) The date and time the webhook was last updated
+
+## Import
+
+An existing webhook can be imported via its unique ID (UUID).
+
+```console
+$ terraform import circleci_webhook.my_webhook "<UUID>"
+```
