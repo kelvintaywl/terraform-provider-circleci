@@ -16,3 +16,11 @@ Please see [the official CircleCI V2 API documentation for schema requirements](
 {{ tffile "examples/resources/webhook/resource.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+An existing webhook can be imported via its unique ID (UUID).
+
+```console
+$ terraform import circleci_webhook.my_webhook "<UUID>"
+```

@@ -24,3 +24,11 @@ This example showcases how to set up the pipeline parameters using `jsonencode` 
 {{ tffile "examples/resources/schedule/specific_days_months.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+An existing schedule can be imported via its unique ID (UUID).
+
+```console
+$ terraform import circleci_schedule.my_schedule "<UUID>"
+```
