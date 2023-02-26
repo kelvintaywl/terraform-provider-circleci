@@ -9,6 +9,10 @@ description: |-
 
 {{ .Description | trimspace }}
 
+**Note**: Contexts cannot be updated.
+
+If you modify the `name`, this will delete the existing context and recreate one instead.
+
 Creating a context for an account is only supported in CircleCI Server (self-hosted) instance.
 A _warning_ message is printed to remind users about this, if owner type is selected as `account`.
 You can observe this message by varying the `TF_LOG` value.

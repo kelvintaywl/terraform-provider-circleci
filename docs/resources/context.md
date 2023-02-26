@@ -2,12 +2,16 @@
 page_title: "circleci_context Resource - terraform-provider-circleci"
 subcategory: ""
 description: |-
-  Manages a project environment variable
+  Manages a context
 ---
 
 # circleci_context (Resource)
 
-Manages a project environment variable
+Manages a context
+
+**Note**: Contexts cannot be updated.
+
+If you modify the `name`, this will delete the existing context and recreate one instead.
 
 Creating a context for an account is only supported in CircleCI Server (self-hosted) instance.
 A _warning_ message is printed to remind users about this, if owner type is selected as `account`.

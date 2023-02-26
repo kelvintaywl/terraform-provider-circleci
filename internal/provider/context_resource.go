@@ -55,7 +55,7 @@ func (r *ContextResource) Metadata(_ context.Context, req resource.MetadataReque
 
 func (r *ContextResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Manages a project environment variable",
+		MarkdownDescription: "Manages a context",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				MarkdownDescription: "The unique ID of the context",

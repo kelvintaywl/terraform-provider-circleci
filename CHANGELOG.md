@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8.1] - 2023-02-27
+
+### Changed
+
+- Corrected documentation around context
+
 ## [0.8.0] - 2023-02-27
 
 ### Added
