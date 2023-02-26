@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.7.2] - 2023-02-26
+
+### Added
+
+- Support import functionality for Schedule and Webhook resources
+
 ## [0.7.1] - 2023-02-26
 
 ### Added
