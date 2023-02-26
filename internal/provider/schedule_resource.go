@@ -487,3 +487,7 @@ func (r *ScheduleResource) Delete(ctx context.Context, req resource.DeleteReques
 		return
 	}
 }
+
+func (r *ScheduleResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+}
