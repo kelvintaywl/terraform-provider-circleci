@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8.0] - 2023-02-27
+
+### Added
+
+- Support context as resource
+
 ## [0.7.2] - 2023-02-26
 
 ### Added
