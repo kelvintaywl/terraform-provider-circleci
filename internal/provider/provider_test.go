@@ -21,6 +21,9 @@ provider "circleci" {
 	projectSlug string = "github/kelvintaywl-cci/tf-provider-acceptance-test-dummy"
 	// webhook name: added-via-ui
 	webhookId string = "8ed03fd1-5426-4138-a27d-aec0328c39fb"
+
+	// org slug: github/kelvintaywl-cci
+	orgId string = "7f284df8-ac74-42d5-9fad-ab23f731e475"
 )
 
 var (
