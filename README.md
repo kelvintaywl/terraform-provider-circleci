@@ -16,6 +16,7 @@ https://registry.terraform.io/providers/kelvintaywl/circleci/latest
 | Webhooks | In progress (90%) :construction_worker: | TODO: pagination |
 | Project | Done :white_check_mark: | |
 | Checkout keys | Done :white_check_mark: | |
+| Context | Done :white_check_mark: | |
 
 | Resource | Status | Remarks |
 | --- | --- | --- |
