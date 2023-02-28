@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8.2] - 2023-02-28
+
+### Added
+
+- Support context as data source
+
 ## [0.8.1] - 2023-02-27
 
 ### Changed
