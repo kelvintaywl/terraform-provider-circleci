@@ -1,0 +1,18 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.Name}} ({{.Type}})
+
+{{ .Description | trimspace }}
+
+Raises an error when the context with the specific name cannot be found.
+
+## Example Usage
+
+{{ tffile "examples/data-sources/context/data-source.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
