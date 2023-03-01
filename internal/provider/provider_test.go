@@ -24,6 +24,10 @@ provider "circleci" {
 
 	// org slug: github/kelvintaywl-cci
 	orgId string = "7f284df8-ac74-42d5-9fad-ab23f731e475"
+
+	// context "from_tf" under github/kelvintaywl-cci org
+	contextId   string = "f2baca54-73ea-4cba-b314-3d50d74bef13"
+	contextName string = "from_tf"
 )
 
 var (
