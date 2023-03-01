@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.9.0] - 2023-03-01
+
+### Added
+
+- Support context environment variable as resource
+
 ## [0.8.2] - 2023-02-28
 
 ### Added
