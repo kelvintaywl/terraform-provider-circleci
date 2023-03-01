@@ -34,7 +34,7 @@ type WebhookResource struct {
 }
 
 type WebhookResourceModel struct {
-	ID            types.String   `tfsdk:"id"`
+	Id            types.String   `tfsdk:"id"`
 	CreatedAt     types.String   `tfsdk:"created_at"`
 	UpdatedAt     types.String   `tfsdk:"updated_at"`
 	Name          types.String   `tfsdk:"name"`
@@ -147,7 +147,7 @@ func (r *WebhookResource) Read(ctx context.Context, req resource.ReadRequest, re
 		return
 	}
 
-	id := state.ID.ValueString()
+	id := state.Id.ValueString()
 	param := webhook.NewGetWebhookParamsWithContext(ctx).WithDefaults()
 	param = param.WithID(strfmt.UUID(id))
 
@@ -159,7 +159,7 @@ func (r *WebhookResource) Read(ctx context.Context, req resource.ReadRequest, re
 
 	w := res.GetPayload()
 
-	state.ID = types.StringValue(w.ID.String())
+	state.Id = types.StringValue(w.ID.String())
 	state.CreatedAt = types.StringValue(w.CreatedAt.String())
 	state.UpdatedAt = types.StringValue(w.UpdatedAt.String())
 	state.Name = types.StringValue(w.Name)
@@ -222,7 +222,7 @@ func (r *WebhookResource) Create(ctx context.Context, req resource.CreateRequest
 	w := res.GetPayload()
 
 	id := w.ID.String()
-	plan.ID = types.StringValue(id)
+	plan.Id = types.StringValue(id)
 	plan.CreatedAt = types.StringValue(w.CreatedAt.String())
 	plan.UpdatedAt = types.StringValue(w.UpdatedAt.String())
 
@@ -243,7 +243,7 @@ func (r *WebhookResource) Update(ctx context.Context, req resource.UpdateRequest
 		return
 	}
 
-	id := plan.ID.ValueString()
+	id := plan.Id.ValueString()
 
 	param := webhook.NewUpdateWebhookParamsWithContext(ctx).WithDefaults()
 	param = param.WithID(strfmt.UUID(id))
@@ -298,7 +298,7 @@ func (r *WebhookResource) Delete(ctx context.Context, req resource.DeleteRequest
 		return
 	}
 
-	id := state.ID.ValueString()
+	id := state.Id.ValueString()
 
 	param := webhook.NewDeleteWebhookParamsWithContext(ctx).WithDefaults()
 	param = param.WithID(strfmt.UUID(id))

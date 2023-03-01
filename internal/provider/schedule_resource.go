@@ -43,7 +43,7 @@ type timetableModel struct {
 }
 
 type ScheduleResourceModel struct {
-	ID                 types.String   `tfsdk:"id"`
+	Id                 types.String   `tfsdk:"id"`
 	CreatedAt          types.String   `tfsdk:"created_at"`
 	UpdatedAt          types.String   `tfsdk:"updated_at"`
 	ProjectSlug        types.String   `tfsdk:"project_slug"`
@@ -249,7 +249,7 @@ func (r *ScheduleResource) Read(ctx context.Context, req resource.ReadRequest, r
 		return
 	}
 
-	id := state.ID.ValueString()
+	id := state.Id.ValueString()
 	param := schedule.NewGetScheduleParamsWithContext(ctx).WithDefaults()
 	param = param.WithID(strfmt.UUID(id))
 
@@ -261,7 +261,7 @@ func (r *ScheduleResource) Read(ctx context.Context, req resource.ReadRequest, r
 
 	sc := res.GetPayload()
 
-	state.ID = types.StringValue(sc.ID.String())
+	state.Id = types.StringValue(sc.ID.String())
 	state.CreatedAt = types.StringValue(sc.CreatedAt.String())
 	state.UpdatedAt = types.StringValue(sc.UpdatedAt.String())
 	state.ProjectSlug = types.StringValue(*sc.ProjectSlug)
@@ -412,7 +412,7 @@ func (r *ScheduleResource) Create(ctx context.Context, req resource.CreateReques
 	sc := res.GetPayload()
 
 	id := sc.ID.String()
-	plan.ID = types.StringValue(id)
+	plan.Id = types.StringValue(id)
 	plan.CreatedAt = types.StringValue(sc.CreatedAt.String())
 	plan.UpdatedAt = types.StringValue(sc.UpdatedAt.String())
 
@@ -433,7 +433,7 @@ func (r *ScheduleResource) Update(ctx context.Context, req resource.UpdateReques
 		return
 	}
 
-	id := plan.ID.ValueString()
+	id := plan.Id.ValueString()
 	param := schedule.NewUpdateScheduleParamsWithContext(ctx).WithDefaults()
 	param = param.WithID(strfmt.UUID(id))
 
@@ -473,7 +473,7 @@ func (r *ScheduleResource) Delete(ctx context.Context, req resource.DeleteReques
 		return
 	}
 
-	id := state.ID.ValueString()
+	id := state.Id.ValueString()
 
 	param := schedule.NewDeleteScheduleParamsWithContext(ctx).WithDefaults()
 	param = param.WithID(strfmt.UUID(id))

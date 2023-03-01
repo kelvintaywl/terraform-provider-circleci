@@ -32,7 +32,7 @@ type WebhooksDataSourceModel struct {
 }
 
 type webhookModel struct {
-	ID            types.String   `tfsdk:"id"`
+	Id            types.String   `tfsdk:"id"`
 	Name          types.String   `tfsdk:"name"`
 	URL           types.String   `tfsdk:"url"`
 	VerifyTLS     types.Bool     `tfsdk:"verify_tls"`
@@ -44,7 +44,7 @@ type webhookModel struct {
 }
 
 type scopeModel struct {
-	ID   types.String `tfsdk:"id"`
+	Id   types.String `tfsdk:"id"`
 	Type types.String `tfsdk:"type"`
 }
 
@@ -173,7 +173,7 @@ func (d *WebhooksDataSource) Read(ctx context.Context, req datasource.ReadReques
 
 	for _, w := range info.Items {
 		webhookState := webhookModel{
-			ID:            types.StringValue(w.ID.String()),
+			Id:            types.StringValue(w.ID.String()),
 			Name:          types.StringValue(w.Name),
 			URL:           types.StringValue(w.URL),
 			VerifyTLS:     types.BoolValue(*w.VerifyTLS),
@@ -183,7 +183,7 @@ func (d *WebhooksDataSource) Read(ctx context.Context, req datasource.ReadReques
 			// NOTE: Scope values MUST be returned;
 			// we can assume this, based on https://circleci.com/docs/api/v2/index.html#operation/getWebhooks
 			Scope: scopeModel{
-				ID:   types.StringValue(w.Scope.ID.String()),
+				Id:   types.StringValue(w.Scope.ID.String()),
 				Type: types.StringValue(*w.Scope.Type),
 			},
 		}
