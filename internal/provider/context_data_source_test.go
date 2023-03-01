@@ -21,9 +21,9 @@ data "circleci_context" "test" {
 	id   = "%s"
 	type = "organization"
   }
-}`, "from_tf", orgId),
+}`, contextName, orgId),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttrSet("data.circleci_context.test", "id"),
+					resource.TestCheckResourceAttr("data.circleci_context.test", "id", contextId),
 					resource.TestCheckResourceAttrSet("data.circleci_context.test", "created_at"),
 				),
 			},

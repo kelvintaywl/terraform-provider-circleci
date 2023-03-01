@@ -17,6 +17,7 @@ Currently, the following resources are supported:
 - [Project Environment Variables](https://circleci.com/docs/set-environment-variable/#set-an-environment-variable-in-a-project)
 - Project Checkout key
 - [Context](https://circleci.com/docs/contexts/)
+- [Context Environment Variables](https://circleci.com/docs/contexts/#adding-and-removing-environment-variables-from-restricted-contexts)
 
 Use the navigation to the left to read about the available resources.
 
