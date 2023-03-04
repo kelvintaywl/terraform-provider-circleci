@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.9.1] - 2023-03-04
+
+### Changed
+
+- Refactored warning messages for call-to-actions (improved developer experience)
+
 ## [0.9.0] - 2023-03-01
 
 ### Added
