@@ -53,7 +53,7 @@ func (r *ContextEnvVarResource) Schema(_ context.Context, _ resource.SchemaReque
 				},
 			},
 			"created_at": schema.StringAttribute{
-				MarkdownDescription: "The date and time the schedule was created",
+				MarkdownDescription: "The date and time the context environment variable was created",
 				Computed:            true,
 				// unchanged even during updates
 				PlanModifiers: []planmodifier.String{
@@ -61,7 +61,7 @@ func (r *ContextEnvVarResource) Schema(_ context.Context, _ resource.SchemaReque
 				},
 			},
 			"updated_at": schema.StringAttribute{
-				MarkdownDescription: "The date and time the schedule was last updated",
+				MarkdownDescription: "The date and time the context environment variable was last updated",
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
