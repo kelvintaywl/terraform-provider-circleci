@@ -190,6 +190,12 @@ func (r *CheckoutKeyResource) Create(ctx context.Context, req resource.CreateReq
 			"Error creating project checkout key",
 			fmt.Sprintf("Could not create project checkout key, unexpected error: %s", err.Error()),
 		)
+		if keyType == "user-key" {
+			resp.Diagnostics.AddWarning(
+				"Ensure you have authorized with GitHub",
+				"See https://support.circleci.com/hc/en-us/articles/360006975013",
+			)
+		}
 		return
 	}
 
