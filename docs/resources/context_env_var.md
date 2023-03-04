@@ -49,6 +49,6 @@ resource "circleci_context_env_var" "test_envvar" {
 
 ### Read-Only
 
-- `created_at` (String) The date and time the schedule was created
+- `created_at` (String) The date and time the context environment variable was created
 - `id` (String) Read-only unique identifier, set as {context_id}/{name}
-- `updated_at` (String) The date and time the schedule was last updated
+- `updated_at` (String) The date and time the context environment variable was last updated

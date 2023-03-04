@@ -25,6 +25,13 @@ Otherwise, the CircleCI API will return a HTTP 500.
 Please see the CircleCI support article below for more information:
 https://support.circleci.com/hc/en-us/articles/360006975013-Troubleshooting-An-internal-server-error-occurred-Create-User-Keys-with-the-API
 
+## Deleting keys
+
+When using `terraform destroy`, please note that only the private key on CircleCI is deleted.
+
+The public key stored on your VCS provider (e.g., GitHub) is not deleted.
+Please delete the public key on the VCS provider side accordingly.
+
 ## Example Usage
 
 {{ tffile "examples/resources/checkout_key/resource.tf" }}

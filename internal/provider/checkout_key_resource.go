@@ -13,8 +13,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 
-	"github.com/hashicorp/terraform-plugin-log/tflog"
-
 	"github.com/kelvintaywl/circleci-go-sdk/client/project"
 	"github.com/kelvintaywl/circleci-go-sdk/models"
 )
@@ -190,6 +188,12 @@ func (r *CheckoutKeyResource) Create(ctx context.Context, req resource.CreateReq
 			"Error creating project checkout key",
 			fmt.Sprintf("Could not create project checkout key, unexpected error: %s", err.Error()),
 		)
+		if keyType == "user-key" {
+			resp.Diagnostics.AddWarning(
+				"Ensure you have authorized with GitHub",
+				"See https://support.circleci.com/hc/en-us/articles/360006975013",
+			)
+		}
 		return
 	}
 
@@ -240,6 +244,9 @@ func (r *CheckoutKeyResource) Delete(ctx context.Context, req resource.DeleteReq
 		)
 		return
 	}
-	cleanupMsg := "Only the private key is deleted on CircleCI. You would want to delete the public key on the VCS side (e.g., GitHub)"
-	tflog.Warn(ctx, cleanupMsg)
+	// so that users are aware of required follow-up.
+	resp.Diagnostics.AddWarning(
+		"Only the private key is deleted on CircleCI.",
+		"You would want to delete the public key on the VCS side (e.g., GitHub).",
+	)
 }
