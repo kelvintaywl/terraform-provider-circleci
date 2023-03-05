@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/go-openapi/strfmt"
 
@@ -11,6 +12,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 
 	"github.com/kelvintaywl/circleci-go-sdk/client/contexts"
 	"github.com/kelvintaywl/circleci-go-sdk/models"
@@ -256,9 +259,14 @@ func (r *ContextEnvVarResource) Delete(ctx context.Context, req resource.DeleteR
 
 	_, err := r.client.Client.Contexts.DeleteContextEnvVar(param, r.client.Auth)
 	if err != nil {
+		errMsg := err.Error()
+		if strings.Contains(errMsg, "not found") {
+			tflog.Warn(ctx, fmt.Sprintf("Context env var no longer found: %s/%s", contextId, name))
+			return
+		}
 		resp.Diagnostics.AddError(
 			"Error deleting context env var",
-			fmt.Sprintf("Could not delete context env var %s, unexpected error: %s", name, err.Error()),
+			fmt.Sprintf("Could not delete context env var %s/%s, unexpected error: %s", contextId, name, errMsg),
 		)
 		return
 	}

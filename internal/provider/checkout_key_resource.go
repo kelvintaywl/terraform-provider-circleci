@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -10,6 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 
@@ -238,9 +241,15 @@ func (r *CheckoutKeyResource) Delete(ctx context.Context, req resource.DeleteReq
 
 	_, err := r.client.Client.Project.DeleteProjectCheckoutKey(param, r.client.Auth)
 	if err != nil {
+		errMsg := err.Error()
+		if strings.Contains(errMsg, "not found") {
+			tflog.Warn(ctx, fmt.Sprintf("key no longer found: %s", fingerprint))
+			return
+		}
+
 		resp.Diagnostics.AddError(
 			"Error deleting project checkout key",
-			fmt.Sprintf("Could not delete project(%s) checkout key %s, unexpected error: %s", projectSlug, fingerprint, err.Error()),
+			fmt.Sprintf("Could not delete project(%s) checkout key %s, unexpected error: %s", projectSlug, fingerprint, errMsg),
 		)
 		return
 	}

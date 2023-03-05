@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/go-openapi/strfmt"
 
@@ -14,6 +15,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
@@ -480,9 +483,15 @@ func (r *ScheduleResource) Delete(ctx context.Context, req resource.DeleteReques
 
 	_, err := r.client.Client.Schedule.DeleteSchedule(param, r.client.Auth)
 	if err != nil {
+		errMsg := err.Error()
+		if strings.Contains(errMsg, "not found") {
+			tflog.Warn(ctx, fmt.Sprintf("Schedule no longer found: %s", id))
+			return
+		}
+
 		resp.Diagnostics.AddError(
 			"Error deleting schedule",
-			fmt.Sprintf("Could not delete schedule %s, unexpected error: %s", id, err.Error()),
+			fmt.Sprintf("Could not delete schedule %s, unexpected error: %s", id, errMsg),
 		)
 		return
 	}

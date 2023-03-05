@@ -3,12 +3,15 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 
 	"github.com/kelvintaywl/circleci-go-sdk/client/project"
 	"github.com/kelvintaywl/circleci-go-sdk/models"
@@ -185,9 +188,15 @@ func (r *EnvVarResource) Delete(ctx context.Context, req resource.DeleteRequest,
 
 	_, err := r.client.Client.Project.DeleteProjectEnvVar(param, r.client.Auth)
 	if err != nil {
+		errMsg := err.Error()
+		if strings.Contains(errMsg, "not found") {
+			tflog.Warn(ctx, fmt.Sprintf("Project(%s) env var no longer found: %s", projectSlug, name))
+			return
+		}
+
 		resp.Diagnostics.AddError(
 			"Error deleting project env var",
-			fmt.Sprintf("Could not delete project(%s) env var %s, unexpected error: %s", projectSlug, name, err.Error()),
+			fmt.Sprintf("Could not delete project(%s) env var %s, unexpected error: %s", projectSlug, name, errMsg),
 		)
 		return
 	}
