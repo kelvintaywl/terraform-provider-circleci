@@ -104,7 +104,7 @@ func (r *WebhookResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 				Required:            true,
 			},
 			"events": schema.ListAttribute{
-				MarkdownDescription: "Events that will trigger the webhook",
+				MarkdownDescription: fmt.Sprintf("Events that will trigger the webhook. Allowed values: %v", vEvents),
 				ElementType:         types.StringType,
 				Required:            true,
 				Validators: []validator.List{

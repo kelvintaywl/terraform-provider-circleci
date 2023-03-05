@@ -117,28 +117,38 @@ func (d *CheckoutKeysDataSource) Read(ctx context.Context, req datasource.ReadRe
 		return
 	}
 
+	pageToken := ""
 	param := project.NewListProjectCheckoutKeysParamsWithContext(ctx).WithDefaults()
 	param = param.WithProjectSlug(data.ProjectSlug.ValueString())
+	param = param.WithPageToken(pageToken)
 
-	res, err := d.client.Client.Project.ListProjectCheckoutKeys(param, d.client.Auth)
-	if err != nil {
-		resp.Diagnostics.AddError("Encountered error fetching API", fmt.Sprintf("%s", err))
-		return
-	}
+	for {
+		param.SetPageToken(pageToken)
 
-	info := res.GetPayload()
-	// token := info.NextPageToken
-	// TODO: consider support of pagination
-	for _, ck := range info.Items {
-		keyState := keyModel{
-			PublicKey:   types.StringValue(ck.PublicKey),
-			Fingerprint: types.StringValue(ck.Fingerprint),
-			Type:        types.StringValue(ck.Type),
-			Preferred:   types.BoolValue(*ck.Preferred),
-			CreatedAt:   types.StringValue(ck.CreatedAt.String()),
+		res, err := d.client.Client.Project.ListProjectCheckoutKeys(param, d.client.Auth)
+		if err != nil {
+			resp.Diagnostics.AddError("Encountered error fetching API", fmt.Sprintf("%s", err))
+			return
 		}
-		data.Keys = append(data.Keys, keyState)
+
+		info := res.GetPayload()
+		for _, ck := range info.Items {
+			keyState := keyModel{
+				PublicKey:   types.StringValue(ck.PublicKey),
+				Fingerprint: types.StringValue(ck.Fingerprint),
+				Type:        types.StringValue(ck.Type),
+				Preferred:   types.BoolValue(*ck.Preferred),
+				CreatedAt:   types.StringValue(ck.CreatedAt.String()),
+			}
+			data.Keys = append(data.Keys, keyState)
+		}
+
+		pageToken = info.NextPageToken
+		if pageToken == "" {
+			break
+		}
 	}
+
 	data.Id = data.ProjectSlug
 
 	// Save data into Terraform state
