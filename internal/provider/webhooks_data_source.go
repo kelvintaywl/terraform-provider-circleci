@@ -10,6 +10,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
+
 	"github.com/kelvintaywl/circleci-go-sdk/client/webhook"
 )
 
@@ -165,11 +167,13 @@ func (d *WebhooksDataSource) Read(ctx context.Context, req datasource.ReadReques
 	}
 
 	info := res.GetPayload()
-
-	// token := info.NextPageToken
-	// TODO: consider support of pagination
-	// However, it seems the ListWebhooks API does not support page-token query params.
-	// See https://circleci.com/docs/api/v2/index.html#operation/getWebhooks
+	if nextPageToken := info.NextPageToken; nextPageToken != "" {
+		// NOTE: there is a maximum of 9 webhooks per project, when testing against the API.
+		// As such, the page token is neither needed or nor useful;
+		// We expect to fetch all <= 9 webhooks within the first fetch.
+		msg := "Next page token found. CircleCI V2 API has likely allowed for more than 9 webhooks."
+		tflog.Warn(ctx, msg)
+	}
 
 	for _, w := range info.Items {
 		webhookState := webhookModel{
