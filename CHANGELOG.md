@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.2] - 2023-03-05
+
+### Changed
+
+- Document maximum no. of webhooks per project (data source)
+- Implement pagination for checkout keys (data source)
+
 ## [0.9.1] - 2023-03-04
 
 ### Changed
