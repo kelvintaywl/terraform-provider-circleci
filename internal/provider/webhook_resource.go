@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"regexp"
+	"strings"
 
 	"github.com/go-openapi/strfmt"
 
@@ -14,6 +15,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -305,9 +308,15 @@ func (r *WebhookResource) Delete(ctx context.Context, req resource.DeleteRequest
 
 	_, err := r.client.Client.Webhook.DeleteWebhook(param, r.client.Auth)
 	if err != nil {
+		errMsg := err.Error()
+		if strings.Contains(errMsg, "not found") {
+			tflog.Warn(ctx, fmt.Sprintf("Webhook no longer found: %s", id))
+			return
+		}
+
 		resp.Diagnostics.AddError(
 			"Error deleting webhook",
-			fmt.Sprintf("Could not delete webhook %s, unexpected error: %s", id, err.Error()),
+			fmt.Sprintf("Could not delete webhook %s, unexpected error: %s", id, errMsg),
 		)
 		return
 	}

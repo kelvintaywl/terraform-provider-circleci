@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/go-openapi/strfmt"
 
@@ -228,9 +229,14 @@ func (r *ContextResource) Delete(ctx context.Context, req resource.DeleteRequest
 
 	_, err := r.client.Client.Contexts.DeleteContext(param, r.client.Auth)
 	if err != nil {
+		errMsg := err.Error()
+		if strings.Contains(errMsg, "not found") {
+			tflog.Warn(ctx, fmt.Sprintf("Context no longer found: %s", id))
+			return
+		}
 		resp.Diagnostics.AddError(
 			"Error deleting project env var",
-			fmt.Sprintf("Could not delete context %s, unexpected error: %s", id, err.Error()),
+			fmt.Sprintf("Could not delete context %s, unexpected error: %s", id, errMsg),
 		)
 		return
 	}
