@@ -9,6 +9,11 @@ description: |-
 
 Fetches the list of webhooks for a specific project.
 
+## Maximum number of webhooks
+
+Currently, there is **a maximum of 9 webhooks per project** as of March 5th, 2023.
+This was confirmed by testing against the V2 API and the CircleCI UI.
+
 ## Example Usage
 
 ```terraform
