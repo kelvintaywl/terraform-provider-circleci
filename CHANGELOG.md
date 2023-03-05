@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.9.3] - 2023-03-05
+
+### Fixed
+
+- Skip NotFound errors when destroying resource, as [recommended](https://developer.hashicorp.com/terraform/plugin/framework/resources/delete#recommendations)
+
 ## [0.9.2] - 2023-03-05
 
 ### Changed
