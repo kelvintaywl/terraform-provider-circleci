@@ -24,7 +24,7 @@ https://registry.terraform.io/providers/kelvintaywl/circleci/latest
 | Schedule | Done :white_check_mark: | |
 | Project Environment Variable | Done :white_check_mark: | |
 | Checkout key | Done :white_check_mark: | |
-| Context | Done :white_check_mark: | Import is not supported |
+| Context | Done :white_check_mark: | Import is not yet supported |
 | Context Environment variable | Done :white_check_mark: | Import is not yet supported |
 
 ## Example
