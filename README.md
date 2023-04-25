@@ -2,7 +2,11 @@
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/kelvintaywl-cci/terraform-provider-circleci/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/kelvintaywl-cci/terraform-provider-circleci/tree/main)
 
-https://registry.terraform.io/providers/kelvintaywl/circleci/latest
+## Usage
+
+To use this provider, refer to https://registry.terraform.io/providers/kelvintaywl/circleci/latest
+
+The rest of the README is mainly focused on how to develop on this source code.
 
 ## Support status
 
