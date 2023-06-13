@@ -13,7 +13,7 @@ func TestAccContextDataSource(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Read testing
 			{
-				// github/kelvintaywl-cci/tf-provider-acceptance-test-dummy
+				// github/kelvintaywl-tf/tf-provider-acceptance-test-dummy
 				Config: providerConfig + fmt.Sprintf(`
 data "circleci_context" "test" {
   name = "%s"

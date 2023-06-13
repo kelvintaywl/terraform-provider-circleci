@@ -28,6 +28,10 @@ jobs:
             OS: linux
             ARCH: amd64
       - run:
+          name: Debug CircleCI user
+          command: |
+            curl -H "Circle-Token: $CIRCLE_TOKEN" https://circleci.com/api/v2/me | jq .
+      - run:
           name: Run acceptance tests
           command: make testacc
 

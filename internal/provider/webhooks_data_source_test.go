@@ -13,7 +13,7 @@ func TestAccWebhooksDataSource(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Read testing
 			{
-				// github/kelvintaywl-cci/tf-provider-acceptance-test-dummy
+				// github/kelvintaywl-tf/tf-provider-acceptance-test-dummy
 				Config: providerConfig + fmt.Sprintf(`
 data "circleci_webhooks" "test" {
   project_id = "%s"
