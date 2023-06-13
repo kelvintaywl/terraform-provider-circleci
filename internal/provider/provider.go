@@ -3,7 +3,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"net/url"
 	"os"
 
 	"github.com/go-openapi/strfmt"
@@ -114,14 +113,6 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 		tflog.Info(ctx, fmt.Sprintf("Using default value for hostname: %s", hostname))
 
 	}
-	apiUrl, err := url.Parse(hostname)
-	if err != nil {
-		resp.Diagnostics.AddAttributeError(
-			path.Root("hostname"),
-			"Invalid hostname",
-			"Ensure that hostname is a valid (HTTPS) URL.",
-		)
-	}
 
 	cfg := api.DefaultTransportConfig().WithHost(hostname)
 
@@ -129,7 +120,7 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 	auth := rtc.APIKeyAuth("Circle-Token", "header", apiToken)
 
 	// hardcoded runner subdomain
-	rhostname := fmt.Sprintf("%s://runner.%s\n", apiUrl.Scheme, apiUrl.Host)
+	rhostname := fmt.Sprintf("runner.%s", hostname)
 	rcfg := rapi.DefaultTransportConfig().WithHost(rhostname)
 	rclient := rapi.NewHTTPClientWithConfig(strfmt.Default, rcfg)
 
