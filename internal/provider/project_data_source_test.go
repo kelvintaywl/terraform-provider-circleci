@@ -13,7 +13,7 @@ func TestAccProjectDataSource(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Read testing
 			{
-				// github/kelvintaywl-cci/tf-provider-acceptance-test-dummy
+				// github/kelvintaywl-tf/tf-provider-acceptance-test-dummy
 				Config: providerConfig + fmt.Sprintf(`
 data "circleci_project" "dummy" {
   slug = "%s"
@@ -22,11 +22,11 @@ data "circleci_project" "dummy" {
 					resource.TestCheckResourceAttr("data.circleci_project.dummy", "id", projectId),
 					resource.TestCheckResourceAttr("data.circleci_project.dummy", "slug", projectSlug),
 
-					resource.TestCheckResourceAttr("data.circleci_project.dummy", "organization_name", "kelvintaywl-cci"),
-					resource.TestCheckResourceAttr("data.circleci_project.dummy", "organization_slug", "gh/kelvintaywl-cci"),
+					resource.TestCheckResourceAttr("data.circleci_project.dummy", "organization_name", "kelvintaywl-tf"),
+					resource.TestCheckResourceAttr("data.circleci_project.dummy", "organization_slug", "gh/kelvintaywl-tf"),
 					resource.TestCheckResourceAttrSet("data.circleci_project.dummy", "organization_id"),
 
-					resource.TestCheckResourceAttr("data.circleci_project.dummy", "vcs_url", "https://github.com/kelvintaywl-cci/tf-provider-acceptance-test-dummy"),
+					resource.TestCheckResourceAttr("data.circleci_project.dummy", "vcs_url", "https://github.com/kelvintaywl-tf/tf-provider-acceptance-test-dummy"),
 					resource.TestCheckResourceAttr("data.circleci_project.dummy", "vcs_default_branch", "main"),
 					resource.TestCheckResourceAttr("data.circleci_project.dummy", "vcs_provider", "GitHub"),
 				),

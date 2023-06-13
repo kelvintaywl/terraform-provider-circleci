@@ -1,6 +1,6 @@
 # (Unofficial) Terraform Provider for CircleCI
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/kelvintaywl-cci/terraform-provider-circleci/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/kelvintaywl-cci/terraform-provider-circleci/tree/main)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/kelvintaywl/terraform-provider-circleci/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/kelvintaywl/terraform-provider-circleci/tree/main)
 
 ## Usage
 
@@ -64,7 +64,7 @@ $ make tf.destroy
 ## Testing
 
 This uses a dummy CircleCI project for acceptance tests:
-https://github.com/kelvintaywl-cci/tf-provider-acceptance-test-dummy
+https://github.com/kelvintaywl-tf/tf-provider-acceptance-test-dummy
 
 ```console
 # Run acceptance tests
