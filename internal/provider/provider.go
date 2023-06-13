@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"os"
 
 	"github.com/go-openapi/strfmt"
@@ -20,6 +21,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 
 	api "github.com/kelvintaywl/circleci-go-sdk/client"
+	rapi "github.com/kelvintaywl/circleci-runner-go-sdk/client"
 )
 
 // Ensure CircleciProvider satisfies various provider interfaces.
@@ -43,8 +45,9 @@ type CircleciProvider struct {
 }
 
 type CircleciAPIClient struct {
-	Client *api.Circleci
-	Auth   runtime.ClientAuthInfoWriter
+	Client       *api.Circleci
+	RunnerClient *rapi.Circleci
+	Auth         runtime.ClientAuthInfoWriter
 }
 
 // CircleciProviderModel describes the provider data model.
@@ -111,14 +114,29 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 		tflog.Info(ctx, fmt.Sprintf("Using default value for hostname: %s", hostname))
 
 	}
+	apiUrl, err := url.Parse(hostname)
+	if err != nil {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("hostname"),
+			"Invalid hostname",
+			"Ensure that hostname is a valid (HTTPS) URL.",
+		)
+	}
 
 	cfg := api.DefaultTransportConfig().WithHost(hostname)
 
 	client := api.NewHTTPClientWithConfig(strfmt.Default, cfg)
 	auth := rtc.APIKeyAuth("Circle-Token", "header", apiToken)
+
+	// hardcoded runner subdomain
+	rhostname := fmt.Sprintf("%s://runner.%s\n", apiUrl.Scheme, apiUrl.Host)
+	rcfg := rapi.DefaultTransportConfig().WithHost(rhostname)
+	rclient := rapi.NewHTTPClientWithConfig(strfmt.Default, rcfg)
+
 	apiClient := &CircleciAPIClient{
-		Client: client,
-		Auth:   auth,
+		Client:       client,
+		RunnerClient: rclient,
+		Auth:         auth,
 	}
 
 	resp.DataSourceData = apiClient
