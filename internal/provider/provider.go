@@ -151,5 +151,6 @@ func (p *CircleciProvider) DataSources(ctx context.Context) []func() datasource.
 		NewWebhooksDataSource,
 		NewCheckoutKeysDataSource,
 		NewContextDataSource,
+		NewRunnerResourceClassesDataSource,
 	}
 }
