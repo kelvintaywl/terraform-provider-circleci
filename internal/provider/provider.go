@@ -143,6 +143,7 @@ func (p *CircleciProvider) Resources(ctx context.Context) []func() resource.Reso
 		NewContextResource,
 		NewContextEnvVarResource,
 		NewRunnerResourceClassResource,
+		NewRunnerTokenResource,
 	}
 }
 
