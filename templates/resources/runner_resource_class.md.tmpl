@@ -1,0 +1,20 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.Name}} ({{.Type}})
+
+{{ .Description | trimspace }}
+
+**Note**: Runner resource-classes cannot be updated.
+
+If you modify the `resource_class` or `description`, this will delete the existing Runner resource-class and recreate one instead.
+
+## Example Usage
+
+{{ tffile "examples/resources/runner_resource_class/resource.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
