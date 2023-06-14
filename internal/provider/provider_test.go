@@ -29,7 +29,8 @@ provider "circleci" {
 	contextId   string = "c050c79f-f03b-4060-80b9-2562c7fdaa5c"
 	contextName string = "from_tf"
 
-	namespace string = "kelvintaywl-tf"
+	namespace     string = "kelvintaywl-tf"
+	resourceClass string = "test"
 )
 
 var (
