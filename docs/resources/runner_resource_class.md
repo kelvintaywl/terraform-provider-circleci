@@ -9,6 +9,10 @@ description: |-
 
 Manages a Runner resource-class
 
+**IMPORTANT**: Please ensure you have already created a namespace for your organization.
+
+Please see: https://circleci.com/docs/runner-installation-linux/#create-namespace-and-resource-class
+
 **Note**: Runner resource-classes cannot be updated.
 
 If you modify the `resource_class` or `description`, this will delete the existing Runner resource-class and recreate one instead.
