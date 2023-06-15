@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.10.2] - 2023-06-15
+
+### Updated
+
+- Update main doc to latest list of resources supported
+
 ## [0.10.1] - 2023-06-15
 
 ### Fixed
