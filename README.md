@@ -21,6 +21,8 @@ The rest of the README is mainly focused on how to develop on this source code.
 | Project | Done :white_check_mark: | |
 | Checkout keys | Done :white_check_mark: | |
 | Context | Done :white_check_mark: | |
+| Runner Resource-Classes | Done :white_check_mark: | |
+| Runner Tokens | Done :white_check_mark: | |
 
 | Resource | Status | Remarks |
 | --- | --- | --- |
@@ -30,6 +32,8 @@ The rest of the README is mainly focused on how to develop on this source code.
 | Checkout key | Done :white_check_mark: | |
 | Context | Done :white_check_mark: | Import is not yet supported |
 | Context Environment variable | Done :white_check_mark: | Import is not yet supported |
+| Runner Resource-class | Done :white_check_mark: | Import is not yet supported |
+| Runner Token | Done :white_check_mark: | Import is not yet supported |
 
 ## Example
 

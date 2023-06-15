@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.10.0] - 2023-06-15
+
+### Added
+
+- Support runner resource-class as resource
+- Support runner resource-classes as data source
+- Support runner token as resource
+- Support runner tokens as data source
+
 ## [0.9.3] - 2023-03-05
 
 ### Fixed
