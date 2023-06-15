@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.3] - 2023-06-15
+
+### Fixed
+
+- Use server hostname as-is for Runner API calls
+
+
 ## [0.10.2] - 2023-06-15
 
 ### Updated
