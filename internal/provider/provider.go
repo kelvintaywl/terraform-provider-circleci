@@ -119,8 +119,10 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 	client := api.NewHTTPClientWithConfig(strfmt.Default, cfg)
 	auth := rtc.APIKeyAuth("Circle-Token", "header", apiToken)
 
-	// hardcoded runner subdomain
-	rhostname := fmt.Sprintf("runner.%s", hostname)
+	rhostname := hostname
+	if hostname == defaultHostName {
+		rhostname = fmt.Sprintf("runner.%s", defaultHostName)
+	}
 	rcfg := rapi.DefaultTransportConfig().WithHost(rhostname)
 	rclient := rapi.NewHTTPClientWithConfig(strfmt.Default, rcfg)
 
