@@ -1,0 +1,26 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.Name}} ({{.Type}})
+
+{{ .Description | trimspace }}
+
+## Example Usage
+
+{{ tffile "examples/resources/runner_token/with_resource_class.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+### Print token raw in output
+
+**Note:** This is not recommended!
+
+However, if you need to, you can print the token (sensitive) out in the output.
+
+{{ tffile "examples/resources/runner_token/print_token.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}

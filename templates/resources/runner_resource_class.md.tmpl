@@ -1,0 +1,24 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.Name}} ({{.Type}})
+
+{{ .Description | trimspace }}
+
+**IMPORTANT**: Please ensure you have already created a namespace for your organization.
+
+Please see: https://circleci.com/docs/runner-installation-linux/#create-namespace-and-resource-class
+
+**Note**: Runner resource-classes cannot be updated.
+
+If you modify the `resource_class` or `description`, this will delete the existing Runner resource-class and recreate one instead.
+
+## Example Usage
+
+{{ tffile "examples/resources/runner_resource_class/resource.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}

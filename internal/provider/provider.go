@@ -20,6 +20,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 
 	api "github.com/kelvintaywl/circleci-go-sdk/client"
+	rapi "github.com/kelvintaywl/circleci-runner-go-sdk/client"
 )
 
 // Ensure CircleciProvider satisfies various provider interfaces.
@@ -43,8 +44,9 @@ type CircleciProvider struct {
 }
 
 type CircleciAPIClient struct {
-	Client *api.Circleci
-	Auth   runtime.ClientAuthInfoWriter
+	Client       *api.Circleci
+	RunnerClient *rapi.Circleci
+	Auth         runtime.ClientAuthInfoWriter
 }
 
 // CircleciProviderModel describes the provider data model.
@@ -116,9 +118,16 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 
 	client := api.NewHTTPClientWithConfig(strfmt.Default, cfg)
 	auth := rtc.APIKeyAuth("Circle-Token", "header", apiToken)
+
+	// hardcoded runner subdomain
+	rhostname := fmt.Sprintf("runner.%s", hostname)
+	rcfg := rapi.DefaultTransportConfig().WithHost(rhostname)
+	rclient := rapi.NewHTTPClientWithConfig(strfmt.Default, rcfg)
+
 	apiClient := &CircleciAPIClient{
-		Client: client,
-		Auth:   auth,
+		Client:       client,
+		RunnerClient: rclient,
+		Auth:         auth,
 	}
 
 	resp.DataSourceData = apiClient
@@ -133,6 +142,8 @@ func (p *CircleciProvider) Resources(ctx context.Context) []func() resource.Reso
 		NewCheckoutKeyResource,
 		NewContextResource,
 		NewContextEnvVarResource,
+		NewRunnerResourceClassResource,
+		NewRunnerTokenResource,
 	}
 }
 
@@ -142,5 +153,7 @@ func (p *CircleciProvider) DataSources(ctx context.Context) []func() datasource.
 		NewWebhooksDataSource,
 		NewCheckoutKeysDataSource,
 		NewContextDataSource,
+		NewRunnerResourceClassesDataSource,
+		NewRunnerTokensDataSource,
 	}
 }

@@ -235,7 +235,7 @@ func (r *ContextResource) Delete(ctx context.Context, req resource.DeleteRequest
 			return
 		}
 		resp.Diagnostics.AddError(
-			"Error deleting project env var",
+			"Error deleting context",
 			fmt.Sprintf("Could not delete context %s, unexpected error: %s", id, errMsg),
 		)
 		return
