@@ -18,6 +18,8 @@ Currently, the following resources are supported:
 - Project Checkout key
 - [Context](https://circleci.com/docs/contexts/)
 - [Context Environment Variables](https://circleci.com/docs/contexts/#adding-and-removing-environment-variables-from-restricted-contexts)
+- [Runner Resource-class](https://circleci.com/docs/runner-faqs/#what-is-a-runner-resource-class)
+- [Runner Token](https://circleci.com/docs/runner-faqs/#what-is-a-runner-resource-class)
 
 Use the navigation to the left to read about the available resources.
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.10.1] - 2023-06-15
+
+### Fixed
+
+- Remove duplicate info in document
+
 ## [0.10.0] - 2023-06-15
 
 ### Added
