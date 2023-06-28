@@ -13,6 +13,18 @@ description: |-
 
 {{ tffile "examples/resources/runner_token/with_resource_class.tf" }}
 
+### Machine Runner setup with AWS EC2 instance
+
+This is a sample for your reference.
+
+Please modify accordingly.
+
+{{ tffile "examples/resources/runner_token/aws_ec2.tf" }}
+
+Here is a sample of the userdata.yaml file:
+
+{{ codefile "yaml" "examples/resources/runner_token/aws_ec2_userdata.yaml" }}
+
 ### Print token raw in output
 
 **Note:** This is not recommended!
