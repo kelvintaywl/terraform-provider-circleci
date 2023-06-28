@@ -1,0 +1,32 @@
+#cloud-config
+packages:
+  - docker
+  - git
+  - rpm-build
+  - policycoreutils-devel
+# NOTE: this is for Amazon Linux 2023 (amd64)
+runcmd:
+  - 'export platform="${platform}"'
+  - 'export agent_version="${agent_version}"'
+  - 'sudo curl https://raw.githubusercontent.com/CircleCI-Public/runner-installation-files/main/download-launch-agent.sh --output ./download-launch-agent.sh'
+  - 'sh ./download-launch-agent.sh'
+  - 'id -u circleci &>/dev/null || sudo adduser -c GECOS circleci'
+  - 'sudo mkdir -p /var/opt/circleci'
+  - 'sudo chmod 0750 /var/opt/circleci'
+  - 'sudo chown -R circleci /var/opt/circleci /opt/circleci'
+  - 'echo "circleci ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers'
+  - 'sudo mkdir -p /etc/opt/circleci && sudo touch /etc/opt/circleci/launch-agent-config.yaml'
+  - 'sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq'
+  - 'chmod +x /usr/bin/yq'
+  - 'yq e ".api.auth_token = \"${token}\"" -i /etc/opt/circleci/launch-agent-config.yaml'
+  - 'yq e ".api.url = \"https://${hostname}\"" -i /etc/opt/circleci/launch-agent-config.yaml'
+  - 'yq e ".runner.name = \"${name}\"" -i /etc/opt/circleci/launch-agent-config.yaml'
+  - 'yq e ".runner.working_directory = \"/var/opt/circleci/workdir\"" -i /etc/opt/circleci/launch-agent-config.yaml'
+  - 'yq e ".runner.cleanup_working_directory = true" -i /etc/opt/circleci/launch-agent-config.yaml'
+  - 'sudo chown -R circleci: /etc/opt/circleci'
+  - 'sudo chmod 600 /etc/opt/circleci/launch-agent-config.yaml'
+  - 'sudo mkdir -p /etc/opt/circleci/policy'
+  - 'sudo sepolicy generate --path /etc/opt/circleci/policy --init /opt/circleci/circleci-launch-agent'
+  - 'sudo curl https://raw.githubusercontent.com/CircleCI-Public/runner-installation-files/main/rhel8-install/circleci_launch_agent.te --output /etc/opt/circleci/policy/circleci_launch_agent.te'
+  - 'sudo /etc/opt/circleci/policy/circleci_launch_agent.sh'
+  - 'sudo /opt/circleci/circleci-launch-agent --config /etc/opt/circleci/launch-agent-config.yaml'
