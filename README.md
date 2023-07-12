@@ -67,15 +67,21 @@ $ make tf.destroy
 
 ## Testing
 
-This uses a dummy CircleCI project for acceptance tests:
-https://github.com/kelvintaywl-tf/tf-provider-acceptance-test-dummy
+We run acceptance tests against an actual CircleCI organization and project:
+
+- Organization: https://github.com/kelvintaywl-tf
+- Project: https://github.com/kelvintaywl-tf/tf-provider-acceptance-test-dummy
 
 ```console
 # Run acceptance tests
-$ export CIRCLE_TOKEN="user API token that can CRUD the dummy project"
+$ export CIRCLE_TOKEN="user API token that can manage the organization and project"
 $ make testacc
 ```
 
+This is so as to contain the "blast radius" of the acceptance tests.
+In worst case, this organization and project is affected, but not more.
+
+In addition, the CircleCI API token used belongs to a [user](https://github.com/orgs/kelvintaywl-tf/people/ktwl41) that is not tied to [my main CircleCI user account](http://github.com/kelvintaywl).
 
 ## Docs
 
