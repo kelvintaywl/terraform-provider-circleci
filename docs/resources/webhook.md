@@ -42,7 +42,7 @@ output "webhooks" {
 
 ### Required
 
-- `events` (List of String) Events that will trigger the webhook. Allowed values: [job-completed workflow-completed]
+- `events` (Set of String) Events that will trigger the webhook. Allowed values: [job-completed workflow-completed]
 - `name` (String) Name of the webhook
 - `project_id` (String) ID of the project
 - `signing_secret` (String, Sensitive) Secret used to build an HMAC hash of the payload and passed as a header in the webhook request

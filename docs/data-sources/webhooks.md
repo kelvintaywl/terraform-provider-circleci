@@ -53,7 +53,7 @@ output "webhooks" {
 Read-Only:
 
 - `created_at` (String) The date and time the webhook was created
-- `events` (List of String) Events that will trigger the webhook
+- `events` (Set of String) Events that will trigger the webhook
 - `id` (String) The unique ID of the webhook
 - `name` (String) The name of the webhook
 - `scope` (Attributes) Scope (see [below for nested schema](#nestedatt--webhooks--scope))
