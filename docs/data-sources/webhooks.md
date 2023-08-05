@@ -57,7 +57,7 @@ Read-Only:
 - `id` (String) The unique ID of the webhook
 - `name` (String) The name of the webhook
 - `scope` (Attributes) Scope (see [below for nested schema](#nestedatt--webhooks--scope))
-- `signing_secret` (String) Masked value of the secret used to build an HMAC hash of the payload
+- `signing_secret` (String) **Masked value** of the secret used to build an HMAC hash of the payload
 - `updated_at` (String) The date and time the webhook was updated
 - `url` (String) URL to deliver the webhook to
 - `verify_tls` (Boolean) Whether to enforce TLS certificate verification when delivering the webhook
