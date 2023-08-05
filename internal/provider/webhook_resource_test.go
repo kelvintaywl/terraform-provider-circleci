@@ -38,7 +38,7 @@ resource "circleci_webhook" "my_webhook" {
 					resource.TestCheckResourceAttrSet("circleci_webhook.my_webhook", "created_at"),
 					resource.TestCheckResourceAttrSet("circleci_webhook.my_webhook", "updated_at"),
 				),
-				ExpectNonEmptyPlan: true,
+				// ExpectNonEmptyPlan: true,
 			},
 			// Update and Read testing
 			{
@@ -66,7 +66,7 @@ resource "circleci_webhook" "my_webhook" {
 					resource.TestCheckResourceAttrSet("circleci_webhook.my_webhook", "created_at"),
 					resource.TestCheckResourceAttrSet("circleci_webhook.my_webhook", "updated_at"),
 				),
-				ExpectNonEmptyPlan: true,
+				// ExpectNonEmptyPlan: true,
 			},
 			// No updates
 			{
