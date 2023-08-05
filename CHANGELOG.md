@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.0] - 2023-08-05
+
+### Fixed
+
+- Update Webhook resource & data-source to detect changes on events and signing_secret as expected
+
 ## [0.10.4] - 2023-06-28
 
 ### Updated
