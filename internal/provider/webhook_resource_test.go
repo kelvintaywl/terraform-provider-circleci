@@ -68,10 +68,9 @@ resource "circleci_webhook" "my_webhook" {
 				),
 				ExpectNonEmptyPlan: true,
 			},
-		},
-		// No updates
-		{
-			Config: providerConfig + fmt.Sprintf(`
+			// No updates
+			{
+				Config: providerConfig + fmt.Sprintf(`
 resource "circleci_webhook" "my_webhook" {
     project_id     = "%s"
     name           = "added-via-terraform-1"
@@ -83,19 +82,20 @@ resource "circleci_webhook" "my_webhook" {
     ]
 }
 `, projectId),
-			Check: resource.ComposeAggregateTestCheckFunc(
-				resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "name", "added-via-terraform-1"),
-				resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "url", "https://example.com/added-via-terraform"),
-				resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "signing_secret", "changed"),
-				resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "project_id", projectId),
-				resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "verify_tls", "false"),
-				resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "events.0", "workflow-completed"),
-				// Verify dynamic values have any value set in the state.
-				resource.TestCheckResourceAttrSet("circleci_webhook.my_webhook", "id"),
-				resource.TestCheckResourceAttrSet("circleci_webhook.my_webhook", "created_at"),
-				resource.TestCheckResourceAttrSet("circleci_webhook.my_webhook", "updated_at"),
-			),
-			ExpectNonEmptyPlan: false,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "name", "added-via-terraform-1"),
+					resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "url", "https://example.com/added-via-terraform"),
+					resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "signing_secret", "changed"),
+					resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "project_id", projectId),
+					resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "verify_tls", "false"),
+					resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "events.0", "workflow-completed"),
+					// Verify dynamic values have any value set in the state.
+					resource.TestCheckResourceAttrSet("circleci_webhook.my_webhook", "id"),
+					resource.TestCheckResourceAttrSet("circleci_webhook.my_webhook", "created_at"),
+					resource.TestCheckResourceAttrSet("circleci_webhook.my_webhook", "updated_at"),
+				),
+				ExpectNonEmptyPlan: false,
+			},
 		},
 	})
 }
