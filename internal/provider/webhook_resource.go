@@ -18,7 +18,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 
 	"github.com/kelvintaywl/circleci-go-sdk/client/webhook"
@@ -37,15 +37,15 @@ type WebhookResource struct {
 }
 
 type WebhookResourceModel struct {
-	Id            types.String   `tfsdk:"id"`
-	CreatedAt     types.String   `tfsdk:"created_at"`
-	UpdatedAt     types.String   `tfsdk:"updated_at"`
-	Name          types.String   `tfsdk:"name"`
-	URL           types.String   `tfsdk:"url"`
-	SigningSecret types.String   `tfsdk:"signing_secret"`
-	ProjectID     types.String   `tfsdk:"project_id"`
-	VerifyTLS     types.Bool     `tfsdk:"verify_tls"`
-	Events        []types.String `tfsdk:"events"`
+	Id            types.String `tfsdk:"id"`
+	CreatedAt     types.String `tfsdk:"created_at"`
+	UpdatedAt     types.String `tfsdk:"updated_at"`
+	Name          types.String `tfsdk:"name"`
+	URL           types.String `tfsdk:"url"`
+	SigningSecret types.String `tfsdk:"signing_secret"`
+	ProjectID     types.String `tfsdk:"project_id"`
+	VerifyTLS     types.Bool   `tfsdk:"verify_tls"`
+	Events        types.Set    `tfsdk:"events"`
 }
 
 var vEvents = []string{
@@ -106,13 +106,12 @@ func (r *WebhookResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 				MarkdownDescription: "Whether to enforce TLS certificate verification when delivering the webhook",
 				Required:            true,
 			},
-			"events": schema.ListAttribute{
+			"events": schema.SetAttribute{
 				MarkdownDescription: fmt.Sprintf("Events that will trigger the webhook. Allowed values: %v", vEvents),
 				ElementType:         types.StringType,
 				Required:            true,
-				Validators: []validator.List{
-					listvalidator.ValueStringsAre(stringvalidator.OneOf(vEvents...)),
-					listvalidator.UniqueValues(),
+				Validators: []validator.Set{
+					setvalidator.ValueStringsAre(stringvalidator.OneOf(vEvents...)),
 				},
 			},
 		},
@@ -167,11 +166,16 @@ func (r *WebhookResource) Read(ctx context.Context, req resource.ReadRequest, re
 	state.UpdatedAt = types.StringValue(w.UpdatedAt.String())
 	state.Name = types.StringValue(w.Name)
 	state.URL = types.StringValue(w.URL)
-	state.SigningSecret = types.StringValue(w.SigningSecret)
 	state.VerifyTLS = types.BoolValue(*w.VerifyTLS)
 	state.ProjectID = types.StringValue(w.Scope.ID.String())
-	for _, event := range w.Events {
-		state.Events = append(state.Events, types.StringValue(event))
+	state.Events, _ = types.SetValueFrom(ctx, types.StringType, w.Events)
+	// NOTE: CircleCI v2 API returns SigningSecret already masked (****).
+	// See https://circleci.com/docs/api/v2/index.html#operation/getWebhookById
+	// We therefore skip setting the returned value as-is to our state.
+	if w.SigningSecret == strings.Repeat("*", len(w.SigningSecret)) {
+		tflog.Info(ctx, "signing-secret should be masked; Skip setting returned value for signing-secret.")
+	} else {
+		tflog.Warn(ctx, "detected possible non-masking of signing-secret")
 	}
 
 	// Set refreshed state
@@ -208,9 +212,10 @@ func (r *WebhookResource) Create(ctx context.Context, req resource.CreateRequest
 		SigningSecret: plan.SigningSecret.ValueString(),
 		VerifyTLS:     &verifyTLS,
 	}
-	for _, event := range plan.Events {
-		body.Events = append(body.Events, event.ValueString())
-	}
+
+	var events []string
+	diags.Append(plan.Events.ElementsAs(ctx, &events, false)...)
+	body.Events = events
 	param = param.WithBody(&body)
 
 	res, err := r.client.Client.Webhook.AddWebhook(param, r.client.Auth)
@@ -265,9 +270,9 @@ func (r *WebhookResource) Update(ctx context.Context, req resource.UpdateRequest
 		SigningSecret: plan.SigningSecret.ValueString(),
 		VerifyTLS:     &verifyTLS,
 	}
-	for _, event := range plan.Events {
-		body.Events = append(body.Events, event.ValueString())
-	}
+	var events []string
+	diags.Append(plan.Events.ElementsAs(ctx, &events, false)...)
+	body.Events = events
 
 	param = param.WithBody(&body)
 	res, err := r.client.Client.Webhook.UpdateWebhook(param, r.client.Auth)
