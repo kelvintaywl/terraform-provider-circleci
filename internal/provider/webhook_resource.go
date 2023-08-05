@@ -166,10 +166,17 @@ func (r *WebhookResource) Read(ctx context.Context, req resource.ReadRequest, re
 	state.UpdatedAt = types.StringValue(w.UpdatedAt.String())
 	state.Name = types.StringValue(w.Name)
 	state.URL = types.StringValue(w.URL)
-	state.SigningSecret = types.StringValue(w.SigningSecret)
 	state.VerifyTLS = types.BoolValue(*w.VerifyTLS)
 	state.ProjectID = types.StringValue(w.Scope.ID.String())
 	state.Events, _ = types.SetValueFrom(ctx, types.StringType, w.Events)
+	// NOTE: CircleCI v2 API returns SigningSecret already masked (****).
+	// See https://circleci.com/docs/api/v2/index.html#operation/getWebhookById
+	// We therefore skip setting the returned value as-is to our state.
+	if w.SigningSecret == strings.Repeat("*", len(w.SigningSecret)) {
+		tflog.Info(ctx, "signing-secret should be masked; Skip setting returned value for signing-secret.")
+	} else {
+		tflog.Warn(ctx, "detected possible non-masking of signing-secret")
+	}
 
 	// Set refreshed state
 	diags = resp.State.Set(ctx, &state)

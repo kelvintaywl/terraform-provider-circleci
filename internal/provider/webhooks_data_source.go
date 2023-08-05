@@ -86,7 +86,7 @@ func (d *WebhooksDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							Computed:            true,
 						},
 						"signing_secret": schema.StringAttribute{
-							MarkdownDescription: "Masked value of the secret used to build an HMAC hash of the payload",
+							MarkdownDescription: "**Masked value** of the secret used to build an HMAC hash of the payload",
 							Computed:            true,
 						},
 						"created_at": schema.StringAttribute{
