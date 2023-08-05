@@ -34,15 +34,15 @@ type WebhooksDataSourceModel struct {
 }
 
 type webhookModel struct {
-	Id            types.String   `tfsdk:"id"`
-	Name          types.String   `tfsdk:"name"`
-	URL           types.String   `tfsdk:"url"`
-	VerifyTLS     types.Bool     `tfsdk:"verify_tls"`
-	SigningSecret types.String   `tfsdk:"signing_secret"`
-	CreatedAt     types.String   `tfsdk:"created_at"`
-	UpdatedAt     types.String   `tfsdk:"updated_at"`
-	Scope         scopeModel     `tfsdk:"scope"`
-	Events        []types.String `tfsdk:"events"`
+	Id            types.String `tfsdk:"id"`
+	Name          types.String `tfsdk:"name"`
+	URL           types.String `tfsdk:"url"`
+	VerifyTLS     types.Bool   `tfsdk:"verify_tls"`
+	SigningSecret types.String `tfsdk:"signing_secret"`
+	CreatedAt     types.String `tfsdk:"created_at"`
+	UpdatedAt     types.String `tfsdk:"updated_at"`
+	Scope         scopeModel   `tfsdk:"scope"`
+	Events        types.Set    `tfsdk:"events"`
 }
 
 type scopeModel struct {
@@ -101,7 +101,7 @@ func (d *WebhooksDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							MarkdownDescription: "Whether to enforce TLS certificate verification when delivering the webhook",
 							Computed:            true,
 						},
-						"events": schema.ListAttribute{
+						"events": schema.SetAttribute{
 							MarkdownDescription: "Events that will trigger the webhook",
 							Computed:            true,
 							ElementType:         types.StringType,
@@ -191,9 +191,8 @@ func (d *WebhooksDataSource) Read(ctx context.Context, req datasource.ReadReques
 				Type: types.StringValue(*w.Scope.Type),
 			},
 		}
-		for _, event := range w.Events {
-			webhookState.Events = append(webhookState.Events, types.StringValue(event))
-		}
+
+		webhookState.Events, _ = types.SetValueFrom(ctx, types.StringType, w.Events)
 		data.Webhooks = append(data.Webhooks, webhookState)
 	}
 	data.Id = data.ProjectId

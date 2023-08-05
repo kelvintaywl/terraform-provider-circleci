@@ -31,7 +31,8 @@ resource "circleci_webhook" "my_webhook" {
 					resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "signing_secret", "rand0m5eCr3t"),
 					resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "project_id", projectId),
 					resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "verify_tls", "true"),
-					resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "events.0", "job-completed"),
+					resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "events.#", "1"),
+					resource.TestCheckTypeSetElemAttr("circleci_webhook.my_webhook", "events.*", "job-completed"),
 					// Verify dynamic values have any value set in the state.
 					resource.TestCheckResourceAttrSet("circleci_webhook.my_webhook", "id"),
 					resource.TestCheckResourceAttrSet("circleci_webhook.my_webhook", "created_at"),
@@ -44,7 +45,7 @@ resource "circleci_webhook" "my_webhook" {
 				Config: providerConfig + fmt.Sprintf(`
 resource "circleci_webhook" "my_webhook" {
 	project_id     = "%s"
-	name           = "added-via-terraform-2"
+	name           = "added-via-terraform-1"
 	url            = "https://example.com/added-via-terraform"
 	signing_secret = "changed"
 	verify_tls     = false
@@ -54,7 +55,7 @@ resource "circleci_webhook" "my_webhook" {
   }
 `, projectId),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "name", "added-via-terraform-2"),
+					resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "name", "added-via-terraform-1"),
 					resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "url", "https://example.com/added-via-terraform"),
 					resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "signing_secret", "changed"),
 					resource.TestCheckResourceAttr("circleci_webhook.my_webhook", "project_id", projectId),
