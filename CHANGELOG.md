@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.1] - 2023-08-12
+
+### Added
+
+- Support imports for Context and Runner resource-class resource
+
 ## [0.11.0] - 2023-08-05
 
 ### Fixed
