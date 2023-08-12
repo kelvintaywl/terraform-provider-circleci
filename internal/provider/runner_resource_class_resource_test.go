@@ -25,6 +25,13 @@ resource "circleci_runner_resource_class" "blade_runner" {
 					resource.TestCheckResourceAttrSet("circleci_runner_resource_class.blade_runner", "id"),
 				),
 			},
+			// Test Import
+			{
+				ResourceName:        "circleci_runner_resource_class.blade_runner",
+				ImportState:         true,
+				ImportStateVerify:   true,
+				ImportStateIdPrefix: fmt.Sprintf("%s/acceptance-test,", namespace),
+			},
 		},
 	})
 }

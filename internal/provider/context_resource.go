@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-openapi/strfmt"
 
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -240,4 +241,25 @@ func (r *ContextResource) Delete(ctx context.Context, req resource.DeleteRequest
 		)
 		return
 	}
+}
+
+func (r *ContextResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// owner type, owner ID, context ID
+	idParts := strings.Split(req.ID, ",")
+
+	if len(idParts) != 3 || idParts[0] == "" || idParts[1] == "" || idParts[2] == "" {
+		resp.Diagnostics.AddError(
+			"Unexpected Import Identifier",
+			fmt.Sprintf("Expected import identifier with format: owner_type,owner_id,id. Got: %q", req.ID),
+		)
+		return
+	}
+
+	ownerType := idParts[0]
+	ownerId := idParts[1]
+	contextId := idParts[2]
+
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("owner").AtName("type"), ownerType)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("owner").AtName("id"), ownerId)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), contextId)...)
 }

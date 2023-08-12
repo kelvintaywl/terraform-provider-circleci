@@ -53,9 +53,9 @@ Required:
 
 ## Import
 
-**Note**: Import is currently not supported.
+An existing context can be imported via its owner type, owner ID and unique context ID (UUID).
 
-This is because, given a context ID, we cannot get all of the context's details.
-
-The GetContext API does not return the owner information.
-See https://circleci.com/docs/api/v2/index.html#operation/getContext
+```console
+# import an organization context
+$ terraform import circleci_context.my_context "organization,<ORG ID>,<CONTEXT ID>"
+```

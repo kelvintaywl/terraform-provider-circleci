@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-openapi/strfmt"
 
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -220,4 +221,24 @@ func (r *RunnerResourceClassResource) Delete(ctx context.Context, req resource.D
 		)
 		return
 	}
+}
+
+func (r *RunnerResourceClassResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+
+	// resource class, ID
+	idParts := strings.Split(req.ID, ",")
+
+	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
+		resp.Diagnostics.AddError(
+			"Unexpected Import Identifier",
+			fmt.Sprintf("Expected import identifier with format: resource_class,id. Got: %q", req.ID),
+		)
+		return
+	}
+
+	runnerResourceClass := idParts[0]
+	id := idParts[1]
+
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("resource_class"), runnerResourceClass)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), id)...)
 }
