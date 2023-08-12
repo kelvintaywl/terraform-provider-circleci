@@ -28,6 +28,13 @@ resource "circleci_context" "foobar_prod" {
 					resource.TestCheckResourceAttrSet("circleci_context.foobar_prod", "created_at"),
 				),
 			},
+			// Test Import
+			{
+				ResourceName:        "circleci_context.foobar_prod",
+				ImportState:         true,
+				ImportStateVerify:   true,
+				ImportStateIdPrefix: fmt.Sprintf("organization,%s,", orgId),
+			},
 		},
 	})
 }
