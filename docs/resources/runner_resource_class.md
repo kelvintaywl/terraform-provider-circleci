@@ -47,3 +47,12 @@ output "runner_from_tf_id" {
 ### Read-Only
 
 - `id` (String) The unique ID of the Runner resource-class
+
+## Import
+
+An existing Runner resource-class can be imported via its namespace/resource_class value, and unique ID (UUID).
+
+```console
+# import a Runner resource-class
+$ terraform import circleci_runner_resource_class.my_runner "<NAMESPACE>/<RUNNER_RESOURCE_CLASS>,<ID>"
+```

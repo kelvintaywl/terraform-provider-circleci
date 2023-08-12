@@ -32,7 +32,7 @@ The rest of the README is mainly focused on how to develop on this source code.
 | Checkout key | Done :white_check_mark: | |
 | Context | Done :white_check_mark: | :white_check_mark: |
 | Context Environment variable | Done :white_check_mark: | |
-| Runner Resource-class | Done :white_check_mark: | |
+| Runner Resource-class | Done :white_check_mark: | :white_check_mark: |
 | Runner Token | Done :white_check_mark: | |
 
 ## Example
