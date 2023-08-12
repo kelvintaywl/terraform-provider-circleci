@@ -85,6 +85,13 @@ resource "circleci_webhook" "my_webhook" {
 				PlanOnly:           true,
 				ExpectNonEmptyPlan: false,
 			},
+			// Test Import
+			{
+				ResourceName: "circleci_webhook.my_webhook",
+				ImportState:  true,
+				// signing_secret will return masked
+				ImportStateVerifyIgnore: []string{"signing_secret"},
+			},
 		},
 	})
 }
