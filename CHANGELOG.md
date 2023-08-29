@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.12.0] - 2023-08-29
+
+### Added
+
+- Support project resource
+
 ## [0.11.1] - 2023-08-12
 
 ### Added
