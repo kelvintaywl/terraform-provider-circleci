@@ -12,24 +12,14 @@ provider "circleci" {
 }
 
 locals {
-  // Replace this with your CircleCI project ID
-  project_id = "c124cca6-d03e-4733-b84d-32b02347b78c"
+  project_slug = "github/kelvintaywl-cci/delete-api"
 }
 
-resource "circleci_webhook" "my_webhook" {
-  project_id     = local.project_id
-  name           = "my_webhook"
-  url            = "https://example.com/hook"
-  signing_secret = "5uperSeCr3t!"
-  verify_tls     = true
-  events = [
-    // accepts only "workflow-completed" and "job-completed"
-    "job-completed",
-    "workflow-completed"
-  ]
+resource "circleci_project" "my_project" {
+  slug = local.project_slug
 }
 
-output "webhooks" {
-  description = "my_webhook_id"
-  value       = circleci_webhook.my_webhook.id
+output "vcs_url" {
+  description = "VCS url"
+  value       = circleci_project.my_project.vcs_url
 }

@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/go-openapi/strfmt"
@@ -46,7 +47,18 @@ type CircleciProvider struct {
 type CircleciAPIClient struct {
 	Client       *api.Circleci
 	RunnerClient *rapi.Circleci
+	V1Client     *http.Client
+	Hostname     string
 	Auth         runtime.ClientAuthInfoWriter
+}
+
+type httpClientTransport struct {
+	APIToken string
+}
+
+func (t *httpClientTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	req.Header.Add("Circle-Token", t.APIToken)
+	return http.DefaultTransport.RoundTrip(req)
 }
 
 // CircleciProviderModel describes the provider data model.
@@ -126,9 +138,15 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 	rcfg := rapi.DefaultTransportConfig().WithHost(rhostname)
 	rclient := rapi.NewHTTPClientWithConfig(strfmt.Default, rcfg)
 
+	httpClient := &http.Client{Transport: &httpClientTransport{
+		APIToken: apiToken,
+	}}
+
 	apiClient := &CircleciAPIClient{
 		Client:       client,
 		RunnerClient: rclient,
+		V1Client:     httpClient,
+		Hostname:     hostname,
 		Auth:         auth,
 	}
 
@@ -146,6 +164,7 @@ func (p *CircleciProvider) Resources(ctx context.Context) []func() resource.Reso
 		NewContextEnvVarResource,
 		NewRunnerResourceClassResource,
 		NewRunnerTokenResource,
+		NewProjectResource,
 	}
 }
 
