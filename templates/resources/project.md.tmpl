@@ -1,0 +1,25 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.Name}} ({{.Type}})
+
+{{ .Description | trimspace }}
+
+## Assumption
+
+- The underlying repository on GitHub / Bitbucket has a .circleci/config.yml file in its default branch.
+
+## Important
+
+CircleCI projects **cannot be deleted**.
+When you run `terraform destroy`, it will not destroy the project on CircleCI.
+
+## Example Usage
+
+{{ tffile "examples/resources/project/resource.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
