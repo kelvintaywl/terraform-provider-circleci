@@ -12,6 +12,7 @@ The CircleCI provider supports the creation of specific CircleCI resources.
 
 Currently, the following resources are supported:
 
+- [Project](https://circleci.com/docs/create-project/)
 - [Project Webhook](https://circleci.com/docs/webhooks/)
 - [Project Scheduled Pipeline](https://circleci.com/docs/scheduled-pipelines/)
 - [Project Environment Variables](https://circleci.com/docs/set-environment-variable/#set-an-environment-variable-in-a-project)
