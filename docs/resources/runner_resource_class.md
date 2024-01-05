@@ -50,15 +50,24 @@ output "runner_from_tf_id" {
 
 ## Import
 
-An existing Runner resource-class can be imported via its namespace/resource_class value, and unique ID (UUID). This can be found by calling the `api/v2/runner/resource` endpoint:
-
-```sh
-curl --request GET \
-  --url 'https://runner.circleci.com/api/v2/runner/resource?namespace=<your-namespace>' \
-  --header 'Circle-Token: <your-api-token>' | jq
-```
+An existing Runner resource-class can be imported via its namespace/resource_class value, and unique ID (UUID).
 
 ```console
 # import a Runner resource-class
 $ terraform import circleci_runner_resource_class.my_runner "<NAMESPACE>/<RUNNER_RESOURCE_CLASS>,<ID>"
 ```
+
+You can look up the IDs by calling the `api/v2/runner/resource` endpoint:
+
+```sh
+# or runner.circleci.com for CircleCI Cloud users
+SERVER=your.server.domain
+NAMESPACE=acmeorg
+CIRCLE_TOKEN="secret"
+
+curl --request GET \
+  --url "https://${SERVER}/api/v2/runner/resource?namespace=${NAMESPACE}" \
+  --header "Circle-Token: ${CIRCLE_TOKEN}" | jq ".items"
+```
+
+You can also use [the `circleci_runner_resource_classes` data source](https://registry.terraform.io/providers/kelvintaywl/circleci/latest/docs/data-sources/runner_resource_classes#example-usage) to look up IDs.
