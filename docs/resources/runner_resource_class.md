@@ -50,7 +50,13 @@ output "runner_from_tf_id" {
 
 ## Import
 
-An existing Runner resource-class can be imported via its namespace/resource_class value, and unique ID (UUID).
+An existing Runner resource-class can be imported via its namespace/resource_class value, and unique ID (UUID). This can be found by calling the `api/v2/runner/resource` endpoint:
+
+```sh
+curl --request GET \
+  --url 'https://runner.circleci.com/api/v2/runner/resource?namespace=<your-namespace>' \
+  --header 'Circle-Token: <your-api-token>' | jq
+```
 
 ```console
 # import a Runner resource-class
