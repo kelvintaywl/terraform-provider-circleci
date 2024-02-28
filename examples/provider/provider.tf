@@ -1,3 +1,13 @@
+terraform {
+  required_providers {
+    circleci = {
+      source = "kelvintaywl/circleci"
+      # update version accordingly
+      version = "0.12.0"
+    }
+  }
+}
+
 provider "circleci" {
   // You can also set this via CIRCLE_TOKEN environment variable.
   api_token = "myCircleCIUserAPIToken"
