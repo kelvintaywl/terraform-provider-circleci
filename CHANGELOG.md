@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0] - 2024-03-03
+
+### Updated
+
+- Update docs around runner resource class & example usage
+- [Breaking] Update license to Mozilla Public License Version 2.0
+
 ## [0.12.0] - 2023-08-29
 
 ### Added
