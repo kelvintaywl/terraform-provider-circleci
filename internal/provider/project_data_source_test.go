@@ -49,7 +49,7 @@ data "circleci_project" "ipsum" {
 
 					resource.TestCheckResourceAttr("data.circleci_project.ipsum", "vcs_url", "//circleci.com/346a7ade-9fae-47ec-b729-da3d5afbe4fc/09cbbbea-993d-41fa-a467-57e1c543ead4"),
 					resource.TestCheckResourceAttr("data.circleci_project.ipsum", "vcs_default_branch", "main"),
-					resource.TestCheckResourceAttr("data.circleci_project.dummy", "vcs_provider", "CircleCI"),
+					resource.TestCheckResourceAttr("data.circleci_project.ipsum", "vcs_provider", "CircleCI"),
 				),
 			},
 		},

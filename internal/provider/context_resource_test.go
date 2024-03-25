@@ -47,7 +47,7 @@ resource "circleci_context" "standalone_prod" {
 }
 `, standaloneOrgId),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("circleci_context.standalone_prod", "name", "foobar_prod"),
+					resource.TestCheckResourceAttr("circleci_context.standalone_prod", "name", "standalone_prod"),
 					resource.TestCheckResourceAttrSet("circleci_context.standalone_prod", "id"),
 					resource.TestCheckResourceAttrSet("circleci_context.standalone_prod", "created_at"),
 				),
