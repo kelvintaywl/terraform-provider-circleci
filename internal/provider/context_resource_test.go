@@ -35,6 +35,23 @@ resource "circleci_context" "foobar_prod" {
 				ImportStateVerify:   true,
 				ImportStateIdPrefix: fmt.Sprintf("organization,%s,", orgId),
 			},
+			// Create and Read testing for standalone
+			{
+				Config: providerConfig + fmt.Sprintf(`
+resource "circleci_context" "standalone_prod" {
+	name         = "standalone_prod"
+	owner        = {
+		id = "%s"
+		type = "organization"
+	}
+}
+`, standaloneOrgId),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("circleci_context.standalone_prod", "name", "foobar_prod"),
+					resource.TestCheckResourceAttrSet("circleci_context.standalone_prod", "id"),
+					resource.TestCheckResourceAttrSet("circleci_context.standalone_prod", "created_at"),
+				),
+			},
 		},
 	})
 }

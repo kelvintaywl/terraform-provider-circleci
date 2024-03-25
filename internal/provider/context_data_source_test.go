@@ -13,7 +13,7 @@ func TestAccContextDataSource(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Read testing
 			{
-				// github/kelvintaywl-tf/tf-provider-acceptance-test-dummy
+				// github/kelvintaywl-tf
 				Config: providerConfig + fmt.Sprintf(`
 data "circleci_context" "test" {
   name = "%s"
@@ -25,6 +25,22 @@ data "circleci_context" "test" {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.circleci_context.test", "id", contextId),
 					resource.TestCheckResourceAttrSet("data.circleci_context.test", "created_at"),
+				),
+			},
+			// Read testing for standalone
+			{
+				// circleci/7UQdtYSr1caLbAR2cHJdU7
+				Config: providerConfig + fmt.Sprintf(`
+data "circleci_context" "standalone" {
+  name = "%s"
+  owner = {
+	id   = "%s"
+	type = "organization"
+  }
+}`, standaloneContextName, standaloneOrgId),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("data.circleci_context.standalone", "id", standaloneContextId),
+					resource.TestCheckResourceAttrSet("data.circleci_context.standalone", "created_at"),
 				),
 			},
 		},

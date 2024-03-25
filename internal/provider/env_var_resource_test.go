@@ -54,6 +54,22 @@ resource "circleci_env_var" "env2" {
 					resource.TestCheckResourceAttr("circleci_env_var.env2", "id", fmt.Sprintf("%s/FIZZBUZZ", projectSlug)),
 				),
 			},
+			// Create and Read settings for standalone
+			{
+				Config: providerConfig + fmt.Sprintf(`
+resource "circleci_env_var" "env1" {
+	project_slug = "%s"
+	name         = "FOOBAR"
+	value        = "random1234"
+}
+`, standaloneProjectSlug),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("circleci_env_var.env1", "name", "FOOBAR"),
+					resource.TestCheckResourceAttr("circleci_env_var.env1", "project_slug", standaloneProjectSlug),
+					resource.TestCheckResourceAttr("circleci_env_var.env1", "value", "random1234"),
+					resource.TestCheckResourceAttr("circleci_env_var.env1", "id", fmt.Sprintf("%s/FOOBAR", standaloneProjectSlug)),
+				),
+			},
 		},
 	})
 }

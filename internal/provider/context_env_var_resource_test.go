@@ -76,6 +76,32 @@ resource "circleci_context_env_var" "env2" {
 					resource.TestCheckResourceAttrSet("circleci_context_env_var.env2", "updated_at"),
 				),
 			},
+			// Create and Read testing for standalone
+			{
+				Config: providerConfig + fmt.Sprintf(`
+			data "circleci_context" "standalone" {
+				name = "%s"
+				owner = {
+					id   = "%s"
+					type = "organization"
+				}
+			}
+			
+			resource "circleci_context_env_var" "env1" {
+				name         = "FOOBAR"
+				value        = "random1234"
+				context_id   = data.circleci_context.standalone.id
+			}
+			`, standaloneContextName, standaloneOrgId),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("circleci_context_env_var.env1", "name", "FOOBAR"),
+					resource.TestCheckResourceAttr("circleci_context_env_var.env1", "value", "random1234"),
+					resource.TestCheckResourceAttr("circleci_context_env_var.env1", "id", fmt.Sprintf("%s/FOOBAR", contextId)),
+					resource.TestCheckResourceAttrSet("circleci_context_env_var.env1", "context_id"),
+					resource.TestCheckResourceAttrSet("circleci_context_env_var.env1", "created_at"),
+					resource.TestCheckResourceAttrSet("circleci_context_env_var.env1", "updated_at"),
+				),
+			},
 		},
 	})
 }
