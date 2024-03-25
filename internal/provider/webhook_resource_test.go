@@ -92,6 +92,35 @@ resource "circleci_webhook" "my_webhook" {
 				// signing_secret will return masked
 				ImportStateVerifyIgnore: []string{"signing_secret"},
 			},
+			// Create and Read testing for standalone
+			{
+				Config: providerConfig + fmt.Sprintf(`
+resource "circleci_webhook" "standalone" {
+	project_id     = "%s"
+	name           = "added-via-terraform-1"
+	url            = "https://standalone.example.com/added-via-terraform"
+	signing_secret = "st4nD4L0n3"
+	verify_tls     = true
+	events = [
+	  "job-completed"
+	]
+}
+`, standaloneProjectId),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("circleci_webhook.standalone", "name", "added-via-terraform-1"),
+					resource.TestCheckResourceAttr("circleci_webhook.standalone", "url", "https://standalone.example.com/added-via-terraform"),
+					resource.TestCheckResourceAttr("circleci_webhook.standalone", "signing_secret", "st4nD4L0n3"),
+					resource.TestCheckResourceAttr("circleci_webhook.standalone", "project_id", standaloneProjectId),
+					resource.TestCheckResourceAttr("circleci_webhook.standalone", "verify_tls", "true"),
+					resource.TestCheckResourceAttr("circleci_webhook.standalone", "events.#", "1"),
+					resource.TestCheckTypeSetElemAttr("circleci_webhook.standalone", "events.*", "job-completed"),
+					// Verify dynamic values have any value set in the state.
+					resource.TestCheckResourceAttrSet("circleci_webhook.standalone", "id"),
+					resource.TestCheckResourceAttrSet("circleci_webhook.standalone", "created_at"),
+					resource.TestCheckResourceAttrSet("circleci_webhook.standalone", "updated_at"),
+				),
+				// ExpectNonEmptyPlan: true,
+			},
 		},
 	})
 }

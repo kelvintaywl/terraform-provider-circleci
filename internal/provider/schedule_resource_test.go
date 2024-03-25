@@ -90,6 +90,50 @@ resource "circleci_schedule" "my_schedule" {
 				),
 				ExpectNonEmptyPlan: true,
 			},
+			// Create and Read testing for standalone
+			{
+				Config: providerConfig + fmt.Sprintf(`
+resource "circleci_schedule" "standalone" {
+	project_slug     = "%s"
+	name             = "added-via-terraform-1"
+	description      = "Runs 2/hr at 00:00~03:00 every 1st & 8th of July"
+	actor            = "current"
+	branch           = "main"
+	timetable = {
+		per_hour      = 2
+		hours_of_day  = [0,1,2]
+		days_of_month = [1,8]
+		months        = ["JUL"]
+	}
+	parameters = jsonencode({
+		my_int    = 123
+		my_bool   = false
+		my_string = "foobar"
+	})
+  }
+`, standaloneProjectSlug),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("circleci_schedule.standalone", "name", "added-via-terraform-1"),
+					resource.TestCheckResourceAttr("circleci_schedule.standalone", "project_slug", standaloneProjectSlug),
+					resource.TestCheckResourceAttr("circleci_schedule.standalone", "description", "Runs 2/hr at 00:00~03:00 every 1st & 8th of July"),
+					resource.TestCheckResourceAttr("circleci_schedule.standalone", "actor", "current"),
+					resource.TestCheckResourceAttr("circleci_schedule.standalone", "branch", "main"),
+					resource.TestCheckNoResourceAttr("circleci_schedule.standalone", "tag"),
+					resource.TestCheckResourceAttrSet("circleci_schedule.standalone", "parameters"),
+					resource.TestCheckResourceAttr("circleci_schedule.standalone", "timetable.per_hour", "2"),
+					resource.TestCheckTypeSetElemAttr("circleci_schedule.standalone", "timetable.hours_of_day.*", "0"),
+					resource.TestCheckTypeSetElemAttr("circleci_schedule.standalone", "timetable.hours_of_day.*", "1"),
+					resource.TestCheckTypeSetElemAttr("circleci_schedule.standalone", "timetable.hours_of_day.*", "2"),
+					resource.TestCheckTypeSetElemAttr("circleci_schedule.standalone", "timetable.days_of_month.*", "1"),
+					resource.TestCheckTypeSetElemAttr("circleci_schedule.standalone", "timetable.days_of_month.*", "8"),
+					resource.TestCheckTypeSetElemAttr("circleci_schedule.standalone", "timetable.months.*", "JUL"),
+					// Verify dynamic values have any value set in the state.
+					resource.TestCheckResourceAttrSet("circleci_schedule.standalone", "id"),
+					resource.TestCheckResourceAttrSet("circleci_schedule.standalone", "created_at"),
+					resource.TestCheckResourceAttrSet("circleci_schedule.standalone", "updated_at"),
+				),
+				ExpectNonEmptyPlan: true,
+			},
 		},
 	})
 }
