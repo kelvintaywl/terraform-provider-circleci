@@ -68,10 +68,12 @@ $ make tf.destroy
 
 ## Testing
 
-We run acceptance tests against an actual CircleCI organization and project:
+We run acceptance tests against an actual CircleCI organizations and projects:
 
-- Organization: https://github.com/kelvintaywl-tf
-- Project: https://github.com/kelvintaywl-tf/tf-provider-acceptance-test-dummy
+| Type | Org | Project |
+| --- | --- | --- |
+| GitHub OAuth | https://github.com/kelvintaywl-tf | https://github.com/kelvintaywl-tf/tf-provider-acceptance-test-dummy |
+| Gitlab (standalone) | https://gitlab.com/ktwl411/ | https://gitlab.com/ktwl411/loren-ipsum |
 
 ```console
 # Run acceptance tests
