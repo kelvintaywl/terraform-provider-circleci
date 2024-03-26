@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1] - 2024-03-26
+
+### Updated
+
+- Update docs around support / non-support for standalone orgs and projects
+- Add tests for resources and data-sources re: standalone orgs and projects
+
 ## [1.0.0] - 2024-03-03
 
 ### Updated
