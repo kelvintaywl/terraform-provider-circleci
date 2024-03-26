@@ -9,6 +9,8 @@ description: |-
 
 Manages a project checkout key
 
+**Note**: Checkout keys are currently [not supported for standalone projects](https://circleci.com/docs/gitlab-integration/#additional-ssh-keys-only).
+
 **Note**: Checkout keys cannot be updated.
 
 If you modify the `type`, this will delete the existing checkout key and recreate one instead.
