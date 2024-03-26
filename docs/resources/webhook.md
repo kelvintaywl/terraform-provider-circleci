@@ -15,6 +15,8 @@ Please see [the official CircleCI V2 API documentation for schema requirements](
 
 ```terraform
 data "circleci_project" "my_project" {
+  // IF standalone project, your project slug would be:
+  // "circleci/<org random string>/<project random string>"
   slug = "github/acmeorg/foobar"
 }
 
