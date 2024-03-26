@@ -31,6 +31,17 @@ provider "circleci" {
 
 	namespace     string = "kelvintaywl-tf"
 	resourceClass string = "test"
+
+	// standalone project & org data
+	standaloneProjectId   string = "09cbbbea-993d-41fa-a467-57e1c543ead4"
+	standaloneProjectSlug string = "circleci/7UQdtYSr1caLbAR2cHJdU7/2DACeEvUr7MosidActmnUs"
+
+	// org circleci/7UQdtYSr1caLbAR2cHJdU7
+	standaloneOrgId string = "346a7ade-9fae-47ec-b729-da3d5afbe4fc"
+
+	// context "data-source-for-tf" under circleci/7UQdtYSr1caLbAR2cHJdU7
+	standaloneContextId   string = "bb83cbf7-d20d-4224-9f70-3516111120a7"
+	standaloneContextName string = "data-source-for-tf"
 )
 
 var (

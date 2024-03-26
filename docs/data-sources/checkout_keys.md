@@ -9,6 +9,8 @@ description: |-
 
 Fetches the checkout keys of a project
 
+**Note**: Checkout keys are currently [not supported for standalone projects](https://circleci.com/docs/gitlab-integration/#additional-ssh-keys-only).
+
 ## Example Usage
 
 ```terraform

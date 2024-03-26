@@ -9,6 +9,8 @@ description: |-
 
 Manages a project's schedule
 
+**Note**: Scheduled pipelines are currently [not supported for standalone projects](https://circleci.com/docs/github-apps-integration/#scheudled-pipelines).
+
 Please see [the official CircleCI documentation for more information](https://circleci.com/docs/scheduled-pipelines/).
 
 ## Example Usage
