@@ -36,7 +36,7 @@ The rest of the README is mainly focused on how to develop on this source code.
 | Runner Resource-class | Done :white_check_mark: | :white_check_mark: |
 | Runner Token | Done :white_check_mark: | |
 
-## Example
+## Examples
 
 See [sandbox](sandbox/main.tf)
 
