@@ -14,6 +14,8 @@ const (
 provider "circleci" {
   // api_token via CIRCLE_TOKEN env var
   hostname = "circleci.com"
+  retry = true
+  max_retries = 4
 }
 `
 	// project name: github/kelvintaywl-tf/tf-provider-acceptance-test-dummy
