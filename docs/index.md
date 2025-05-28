@@ -56,3 +56,5 @@ provider "circleci" {
 
 - `api_token` (String) A CircleCI user API token. This can also be set via the `CIRCLE_TOKEN` environment variable.
 - `hostname` (String) CircleCI hostname (default: circleci.com). This can also be set via the `CIRCLE_HOSTNAME` environment variable.
+- `max_retries` (Number) Maximum number of retries for API calls when retry is enabled (default: 3).
+- `retry` (Boolean) Whether to retry API calls when provider receives an HTTP 429 status code (default: false).
