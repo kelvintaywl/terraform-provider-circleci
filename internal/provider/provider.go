@@ -81,6 +81,7 @@ func (t *retryOn429Transport) RoundTrip(req *http.Request) (*http.Response, erro
 		}
 		resp.Body.Close()
 		backoffMs := t.Backoff(attempts)
+		tflog.Debug(req.Context(), fmt.Sprintf("Received HTTP 429, retrying in %d ms (attempt %d/%d)", backoffMs, attempts+1, t.MaxRetries))
 		time.Sleep(time.Duration(backoffMs) * time.Millisecond)
 		attempts++
 	}
@@ -110,7 +111,7 @@ func (p *CircleciProvider) Schema(ctx context.Context, req provider.SchemaReques
 				MarkdownDescription: fmt.Sprintf("CircleCI hostname (default: %s). This can also be set via the `CIRCLE_HOSTNAME` environment variable.", defaultHostName),
 				Optional:            true,
 			},
-			"retry": schema.StringAttribute{
+			"retry": schema.BoolAttribute{
 				MarkdownDescription: "Whether to retry API calls when provider receives an HTTP 429 status code (default: false).",
 				Optional:            true,
 			},
@@ -184,12 +185,15 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 	}
 	rcfg := rapi.DefaultTransportConfig().WithHost(rhostname)
 
+	defaultTransport := &httpClientTransport{
+		APIToken: apiToken,
+	}
+
 	var rclient *rapi.Circleci
 	if retry {
 		// Add retry transport for 429s
-		baseTransport := http.DefaultTransport
 		retryTransport := &retryOn429Transport{
-			Base:       baseTransport,
+			Base:       defaultTransport,
 			MaxRetries: int(maxRetries),
 			Backoff: func(attempt int) int {
 				// Exponential backoff: 500ms, 1000ms, 2000ms
@@ -203,9 +207,7 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 		rclient = rapi.NewHTTPClientWithConfig(strfmt.Default, rcfg)
 	}
 
-	httpClient := &http.Client{Transport: &httpClientTransport{
-		APIToken: apiToken,
-	}}
+	httpClient := &http.Client{Transport: defaultTransport}
 
 	apiClient := &CircleciAPIClient{
 		Client:       client,
