@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.0] - 2025-06-05
+
+### Added
+
+- Add retry logic on rate-limits (HTTP 429). Contributed by @icj217 :beer:
+
 ## [1.0.1] - 2024-03-26
 
 ### Updated
