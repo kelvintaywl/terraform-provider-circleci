@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/go-openapi/strfmt"
 
@@ -61,10 +62,37 @@ func (t *httpClientTransport) RoundTrip(req *http.Request) (*http.Response, erro
 	return http.DefaultTransport.RoundTrip(req)
 }
 
+// retryOn429Transport wraps an http.RoundTripper to retry on HTTP 429 responses.
+type retryOn429Transport struct {
+	Base       http.RoundTripper
+	MaxRetries int
+	Backoff    func(attempt int) int // returns milliseconds
+}
+
+func (t *retryOn429Transport) RoundTrip(req *http.Request) (*http.Response, error) {
+	attempts := 0
+	for {
+		resp, err := t.Base.RoundTrip(req)
+		if err != nil {
+			return resp, err
+		}
+		if resp.StatusCode != 429 || attempts >= t.MaxRetries {
+			return resp, err
+		}
+		resp.Body.Close()
+		backoffMs := t.Backoff(attempts)
+		tflog.Debug(req.Context(), fmt.Sprintf("Received HTTP 429, retrying in %d ms (attempt %d/%d)", backoffMs, attempts+1, t.MaxRetries))
+		time.Sleep(time.Duration(backoffMs) * time.Millisecond)
+		attempts++
+	}
+}
+
 // CircleciProviderModel describes the provider data model.
 type CircleciProviderModel struct {
-	ApiToken types.String `tfsdk:"api_token"`
-	Hostname types.String `tfsdk:"hostname"`
+	ApiToken   types.String `tfsdk:"api_token"`
+	Hostname   types.String `tfsdk:"hostname"`
+	Retry      types.Bool   `tfsdk:"retry"`
+	MaxRetries types.Int64  `tfsdk:"max_retries"`
 }
 
 func (p *CircleciProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -83,6 +111,14 @@ func (p *CircleciProvider) Schema(ctx context.Context, req provider.SchemaReques
 				MarkdownDescription: fmt.Sprintf("CircleCI hostname (default: %s). This can also be set via the `CIRCLE_HOSTNAME` environment variable.", defaultHostName),
 				Optional:            true,
 			},
+			"retry": schema.BoolAttribute{
+				MarkdownDescription: "Whether to retry API calls when provider receives an HTTP 429 status code (default: false).",
+				Optional:            true,
+			},
+			"max_retries": schema.Int64Attribute{
+				MarkdownDescription: "Maximum number of retries for API calls when retry is enabled (default: 3).",
+				Optional:            true,
+			},
 		},
 	}
 }
@@ -93,6 +129,10 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 	// Check environment variables
 	apiToken := os.Getenv("CIRCLE_TOKEN")
 	hostname := os.Getenv("CIRCLE_HOSTNAME")
+
+	// Retry settings
+	retry := false
+	maxRetries := int64(3)
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 	if resp.Diagnostics.HasError() {
@@ -107,6 +147,14 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 
 	if data.Hostname.ValueString() != "" {
 		hostname = data.Hostname.ValueString()
+	}
+
+	if data.Retry.ValueBool() {
+		retry = data.Retry.ValueBool()
+	}
+
+	if data.MaxRetries.ValueInt64() > 0 {
+		maxRetries = data.MaxRetries.ValueInt64()
 	}
 
 	if apiToken == "" {
@@ -136,11 +184,30 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 		rhostname = fmt.Sprintf("runner.%s", defaultHostName)
 	}
 	rcfg := rapi.DefaultTransportConfig().WithHost(rhostname)
-	rclient := rapi.NewHTTPClientWithConfig(strfmt.Default, rcfg)
 
-	httpClient := &http.Client{Transport: &httpClientTransport{
+	defaultTransport := &httpClientTransport{
 		APIToken: apiToken,
-	}}
+	}
+
+	var rclient *rapi.Circleci
+	if retry {
+		// Add retry transport for 429s
+		retryTransport := &retryOn429Transport{
+			Base:       defaultTransport,
+			MaxRetries: int(maxRetries),
+			Backoff: func(attempt int) int {
+				// Exponential backoff: 500ms, 1000ms, 2000ms
+				return 500 << attempt
+			},
+		}
+		transport := rtc.New(rcfg.Host, rcfg.BasePath, rcfg.Schemes)
+		transport.Transport = retryTransport
+		rclient = rapi.New(transport, strfmt.Default)
+	} else {
+		rclient = rapi.NewHTTPClientWithConfig(strfmt.Default, rcfg)
+	}
+
+	httpClient := &http.Client{Transport: defaultTransport}
 
 	apiClient := &CircleciAPIClient{
 		Client:       client,
