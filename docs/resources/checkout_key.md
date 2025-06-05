@@ -63,3 +63,12 @@ output "deploy_key_fingerprint" {
 - `id` (String) Read-only unique identifier: uses fingerprint
 - `preferred` (Boolean) A boolean value that indicates if this key is preferred
 - `public_key` (String) A public SSH key
+
+## Import
+
+An existing checkout key can be imported using the project slug and key
+fingerprint, separated by a comma (`,`).
+
+```console
+$ terraform import circleci_checkout_key.deploy_key "<VCS>/<ORG>/<REPO>,<FINGERPRINT>"
+```
