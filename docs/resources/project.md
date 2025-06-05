@@ -57,3 +57,11 @@ output "vcs_url" {
 - `vcs_default_branch` (String) Default branch of this project
 - `vcs_provider` (String) VCS provider (either GitHub, Bitbucket or CircleCI)
 - `vcs_url` (String) URL to the repository hosting the project's code
+
+## Import
+
+An existing project can be imported via its slug.
+
+```console
+$ terraform import circleci_project.my_project "<VCS>/<ORG>/<REPO>"
+```

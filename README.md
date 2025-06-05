@@ -24,17 +24,17 @@ The rest of the README is mainly focused on how to develop on this source code.
 | Runner Resource-Classes | Done :white_check_mark: | |
 | Runner Tokens | Done :white_check_mark: | |
 
-| Resource | Status | Import supported? |
-| --- | --- | --- |
-| Webhook | Done :white_check_mark: | :white_check_mark: |
-| Schedule | Done :white_check_mark: | :white_check_mark: |
-| Project | Done :white_check_mark: | |
-| Project Environment Variable | Done :white_check_mark: | |
-| Checkout key | Done :white_check_mark: | |
-| Context | Done :white_check_mark: | :white_check_mark: |
-| Context Environment variable | Done :white_check_mark: | |
-| Runner Resource-class | Done :white_check_mark: | :white_check_mark: |
-| Runner Token | Done :white_check_mark: | |
+| Resource                     | Status                  | Import supported?  |
+| ---                          | ---                     | ---                |
+| Webhook                      | Done :white_check_mark: | :white_check_mark: |
+| Schedule                     | Done :white_check_mark: | :white_check_mark: |
+| Project                      | Done :white_check_mark: | :white_check_mark: |
+| Project Environment Variable | Done :white_check_mark: |                    |
+| Checkout key                 | Done :white_check_mark: | :white_check_mark: |
+| Context                      | Done :white_check_mark: | :white_check_mark: |
+| Context Environment variable | Done :white_check_mark: |                    |
+| Runner Resource-class        | Done :white_check_mark: | :white_check_mark: |
+| Runner Token                 | Done :white_check_mark: |                    |
 
 ## Examples
 

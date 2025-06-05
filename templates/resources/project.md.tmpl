@@ -23,3 +23,11 @@ When you run `terraform destroy`, it will not destroy the project on CircleCI.
 {{ tffile "examples/resources/project/resource.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+An existing project can be imported via its slug.
+
+```console
+$ terraform import circleci_project.my_project "<VCS>/<ORG>/<REPO>"
+```

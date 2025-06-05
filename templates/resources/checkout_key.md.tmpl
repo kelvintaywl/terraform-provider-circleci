@@ -39,3 +39,12 @@ Please delete the public key on the VCS provider side accordingly.
 {{ tffile "examples/resources/checkout_key/resource.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
+
+## Import
+
+An existing checkout key can be imported using the project slug and key
+fingerprint, separated by a comma (`,`).
+
+```console
+$ terraform import circleci_checkout_key.deploy_key "<VCS>/<ORG>/<REPO>,<FINGERPRINT>"
+```
