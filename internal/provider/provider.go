@@ -176,7 +176,23 @@ func (p *CircleciProvider) Configure(ctx context.Context, req provider.Configure
 
 	cfg := api.DefaultTransportConfig().WithHost(hostname)
 
-	client := api.NewHTTPClientWithConfig(strfmt.Default, cfg)
+	var client *api.Circleci
+	if retry {
+		// Add retry transport for 429s
+		retryTransport := &retryOn429Transport{
+			Base:       http.DefaultTransport,
+			MaxRetries: int(maxRetries),
+			Backoff: func(attempt int) int {
+				// Exponential backoff: 500ms, 1000ms, 2000ms
+				return 500 << attempt
+			},
+		}
+		transport := rtc.New(cfg.Host, cfg.BasePath, cfg.Schemes)
+		transport.Transport = retryTransport
+		client = api.New(transport, strfmt.Default)
+	} else {
+		client = api.NewHTTPClientWithConfig(strfmt.Default, cfg)
+	}
 	auth := rtc.APIKeyAuth("Circle-Token", "header", apiToken)
 
 	rhostname := hostname
